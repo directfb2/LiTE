@@ -1,0 +1,5 @@
+PROJECT_NAME          = LiTE
+INPUT                 = lite
+EXCLUDE               = lite/lite_internal.h
+EXCLUDE_PATTERNS      = *.c
+OPTIMIZE_OUTPUT_FOR_C = YES

@@ -1,0 +1,8 @@
+LiTE is built using Meson and Ninja:
+
+  $ meson build/
+  $ ninja -C build/
+
+Finally, you can install LiTE using:
+
+  $ ninja -C build/ install
