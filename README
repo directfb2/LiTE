@@ -1,0 +1,5 @@
+LiTE
+====
+
+LiTE stands for Lightweight Toolkit Enabler and is a simple user interface library on top of DirectFB.
+Widgets can be used with a default theme, or with its own custom theme.
