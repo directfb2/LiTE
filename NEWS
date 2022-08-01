@@ -1,0 +1,186 @@
+0.9.1
+-----
+- Added lite_get_progressbar_value(), lite_get_text_button_state()
+- Added LITE_BOUNDING_UPDATES and LITE_DEBUG_UPDATES environment variables
+- Back to widgets built inside the LiTE library
+- Create default widget theme during lite_open() sequence
+- Meson build system
+- Replace LITE_NO_THEME with LITE_NO_FRAME
+
+0.8.10 (September 19 2008)
+------
+- Added lite_get_layer_size()
+- Added lite_set_box_visible()
+- Use MakeSubSurface() instead of GetSubSurface()
+
+0.8.9 (July 1 2008)
+-----
+- Added lite_get_textline_text()
+
+0.8.8 (June 21 2008)
+-----
+- Move widgets into new library called LeCK, LiTE's extended Component Kit
+
+0.8.7 (June 9 2008)
+-----
+- Allow different types of buttons: Push and Toggle
+- New check, list, scrollbar and text button widgets
+
+0.8.6 (December 21 2007)
+-----
+- Don't load default cursor if LITE_NO_CURSOR is exported
+
+0.8.5 (December 14 2007)
+-----
+- Release the drag box when the containing window is left. Since the mouse is
+  grabbed while dragging, this only happens when other parts of the system
+  adjust the window hierarchy
+
+0.8.4 (March 1 2007)
+-----
+- Change the order of calls in the event loop so that window refresh occurs
+  without also triggering timeouts
+
+0.8.3 (December 13 2006)
+-----
+- Added lite_window_event_available(), lite_set_window_bounds()
+- Added lite_rebase_window_timeouts(), lite_destroy_all_windows()
+- lite_window_event_loop() will force an update at least once every 200
+  milliseconds in case an update is needed and hasn't happened yet
+
+0.8.2 (October 14 2006)
+-----
+- Support for vertical sliders
+
+0.8.1 (September 20 2006)
+-----
+- Added lite_set_window_enabled()
+
+0.8.0 (August 30 2006)
+-----
+- When a window has been resized but the resizing hasn't taken effect, updates
+  to the window will be discarded until the resizing occurs, as resizing will
+  force a redraw of the whole window
+
+0.7.2 (May 5 2006)
+-----
+- Added lite_get_font_filename()
+- Collect window updates into up to 4 different regions, making updates faster
+
+0.7.1 (February 2 2006)
+-----
+- Added lite_on_raw_window_mouse_moved()
+
+0.7.0 (Jan 22 2006)
+----
+- Added lite_on_raw_window_wheel()
+
+0.6.5 (December 20 2005)
+-----
+- Add timeout callback feature
+- Added lite_set_cursor_hotspot()
+- Defer opacity change of a window (making it visible) until the window is
+  updated once
+
+0.6.4 (November 18 2005)
+-----
+- New LITE_WINDOW_FIXED flag used to ensure that a window can't be moved or
+  resized
+
+0.6.3 (Nov 7 2005)
+-----
+- If a LiteBox is not visible, then do not show the children of the LiteBox
+
+0.6.2 (October 28 2005)
+-----
+- Added lite_get_cursor_opacity()
+- Internal APIs lite_add_child() and lite_remove_child() are now exported
+- Delay window destruction so that windows are destroyed later, not immediately
+  in the event loop
+
+0.6.1 (October 11 2005)
+-----
+- Added lite_get_window_size()
+- New macros LITE_NULL_PARAMETER_CHECK(), LITE_BOX_PARAMETER_CHECK(),
+  LITE_WINDOW_PARAMETER_CHECK()
+
+0.6.0 (September 26 2005)
+-----
+- Added lite_on_window_universal_event()
+
+0.5.3 (September 7 2005)
+-----
+- Added lite_window_set_creator() and lite_window_get_creator()
+
+0.5.2 (August 26 2005)
+-----
+- Added external "C" wrappers in all header files for use in C++
+- Added lite_on_window_event()
+
+0.5.1 (August 18 2005)
+-----
+- Added lite_set_exit_idle_loop()
+
+0.5.0 (July 10 2005)
+-----
+- Added lite_get_layer_interface()
+- New constants liteFullWindowOpacity and liteNoWindowOpacity
+- Widgets are now created with a specific theme they can use
+
+0.4.3 (June 24 2005)
+-----
+- Added lite_hide_cursor(), lite_show_cursor() and lite_set_cursor_opacity()
+
+0.4.2 (June 17 2005)
+-----
+- Added lite_on_raw_window_mouse() and lite_on_raw_window_keyboard()
+- Don't load default window theme if LITE_NO_THEME is exported
+- Handle themes with the new LiteTheme base structure
+
+0.4.1 (June 10 2005)
+-----
+- Added lite_get_event_buffer()
+
+0.4.0 (June 2 2005)
+-----
+- If the box being removed is focused, then move the focus to the window
+
+0.3.2 (May 18 2005)
+-----
+- Added lite_ref_font()
+- New APIs for cursor management
+- Support for modal windows
+
+0.3.1 (May 12 2005)
+-----
+- Added lite_get_current_key_modifier()
+
+0.3.0 (March 31 2005)
+-----
+- Added lite_on_window_wheel()
+
+0.2.2 (March 27 2005)
+-----
+- Added lite_on_window_user_event() and lite_post_event_to_window()
+
+0.2.1 (March 15 2005)
+-----
+- Add fontdir config option to specify font directory
+
+0.2.0 (February 15 2005)
+-----
+- Add DFBFontAttributes argument to lite_get_font() / lite_get_font_from_file()
+- Added lite_get_dfb_interface()
+- Added lite_set_active_font() and lite_get_active_font()
+- Added text color support to label widget
+- Default window background colors, default window frame images, default cursor,
+  default fonts are defined in lite_config.h
+
+0.1.0 (February 3 2005)
+-----
+- Added lite_on_window_mouse() and lite_on_window_keyboard()
+- Added lite_set_button_image_surface()
+
+0.0.0 (October 23 2002)
+-----
+- Original code by Denis Oliver Kropp
