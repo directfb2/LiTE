@@ -1,0 +1,11 @@
+commit 4e9f4a86fa1b3a231221c126975e6fa6e4f81585
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Mon Aug 1 18:01:30 2022 +0200
+
+    Restore the LiTE framework
+
+commit 2ebc92f314af13186b60935280045d5ba2855775
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Mon Aug 1 17:53:31 2022 +0200
+
+    Initial revision
