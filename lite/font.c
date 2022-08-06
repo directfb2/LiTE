@@ -342,6 +342,8 @@ cache_get_entry_from_file( const char        *file,
 
      ret = lite_dfb->CreateFont( lite_dfb, file, &desc, &font );
      if (ret) {
+          DirectFBError( "LiTE/Font: CreateFont() failed", ret );
+
           /* unlock cache */
           direct_mutex_unlock( &fonts_mutex );
 
@@ -377,20 +379,22 @@ cache_get_entry( const char        *name,
                  int                size,
                  DFBFontAttributes  attr )
 {
-     int       len = strlen( LITEFONTDIR ) + 1 + strlen( name ) + 6 + 1;
+     LiteFont *entry = NULL;
+     int       len   = strlen( LITEFONTDIR ) + 1 + strlen( name ) + 6 + 1;
      char      file[len];
-     LiteFont *entry;
 
      D_ASSERT( name != NULL );
 
-     /* first try to load a font in DGIFF format */
-     snprintf( file, len, LITEFONTDIR"/%s.dgiff", name );
-     entry = cache_get_entry_from_file( file, size, attr );
+     if (!getenv( "LITE_NO_DGIFF" )) {
+          /* first try to load a font in DGIFF format */
+          snprintf( file, len, LITEFONTDIR"/%s.dgiff", name );
+          entry = cache_get_entry_from_file( file, size, attr );
+     }
 
      if (entry == NULL) {
-         /* otherwise fall back on a font in TTF format */
-         snprintf( file, len, LITEFONTDIR"/%s.ttf", name );
-         entry = cache_get_entry_from_file( file, size, attr );
+          /* otherwise fall back on a font in TTF format */
+          snprintf( file, len, LITEFONTDIR"/%s.ttf", name );
+          entry = cache_get_entry_from_file( file, size, attr );
      }
 
      return entry;

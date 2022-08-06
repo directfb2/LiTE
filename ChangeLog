@@ -1,3 +1,24 @@
+commit 636aeaa23914237dd3b8338a55579b5460390187
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sat Aug 6 12:35:20 2022 +0200
+
+    Add LITE_NO_DGIFF and LITE_NO_DFIFF environment variables
+
+commit 082d21e592bdbfc74fc34a0a3a73a57c28492e46
+Merge: 2ebc92f dfff944
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Mon Aug 1 18:05:59 2022 +0200
+
+    Merge pull request #2 from caramelli/master
+    
+    Restore the LiTE framework
+
+commit dfff944194c0ed8e20888f8552c9aa7307446b15
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Mon Aug 1 18:01:49 2022 +0200
+
+    Add ChangeLog
+
 commit 4e9f4a86fa1b3a231221c126975e6fa6e4f81585
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Mon Aug 1 18:01:30 2022 +0200

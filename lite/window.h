@@ -82,9 +82,10 @@ typedef enum {
 
 /** @brief LiteWindow theme. */
 typedef struct {
-     LiteTheme      theme;                                /**< Base LiTE Theme */
+     LiteTheme       theme;                               /**< Base LiTE Theme */
 
-     LiteThemeFrame frame;                                /**< Frame structure */
+     LiteFont       *title_font;                          /**< Title font */
+     LiteThemeFrame  frame;                               /**< Frame bitmaps */
 } LiteWindowTheme;
 
 /** @brief No window theme. */
@@ -217,7 +218,6 @@ typedef struct _LiteWindow {
 
      int                            internal_ref_count;   /**< Event loop reference count */
 
-     LiteFont                      *title_font;           /**< Title font */
      DFBColor                       title_color;          /**< Title color */
      int                            title_x_offset;       /**< Title x offset */
      int                            title_y_offset;       /**< Title y offset */
@@ -888,14 +888,22 @@ DFBResult lite_on_window_wheel             ( LiteWindow          *window,
  * This function makes the theme.
  *
  * @param[in]  bg_color                      Background color
+ * @param[in]  spec                          Title font specification
+ * @param[in]  style                         Title font style
+ * @param[in]  size                          Title font size
+ * @param[in]  attr                          Title font attributes
  * @param[in]  image_paths                   File paths with window frame images
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_new_window_theme            ( const DFBColor   *bg_color,
-                                             const char       *image_paths[LITE_THEME_FRAME_PART_NUM],
-                                             LiteWindowTheme **ret_theme );
+DFBResult lite_new_window_theme            ( const DFBColor     *bg_color,
+                                             const char         *spec,
+                                             LiteFontStyle       style,
+                                             int                 size,
+                                             DFBFontAttributes   attr,
+                                             const char         *image_paths[LITE_THEME_FRAME_PART_NUM],
+                                             LiteWindowTheme   **ret_theme );
 
 /**
  * @brief Destroy a window theme.

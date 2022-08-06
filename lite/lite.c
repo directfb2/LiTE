@@ -43,21 +43,25 @@ static int        lite_refs   = 0;
 static char *
 get_image_path( const char *name )
 {
-     DirectResult  ret;
+     DirectResult  ret = DFB_FAILURE;
      int           len;
      char         *path;
+
+     D_ASSERT( name != NULL );
 
      len  = strlen( DATADIR ) + 1 + strlen( name ) + 6 + 1;
      path = alloca( len );
 
-     /* try to find an image in DFIFF format */
-     snprintf( path, len, DATADIR"/%s.dfiff", name );
-     ret = direct_access( path, R_OK );
+     if (!getenv( "LITE_NO_DFIFF" )) {
+          /* first try to find an image in DFIFF format */
+          snprintf( path, len, DATADIR"/%s.dfiff", name );
+          ret = direct_access( path, R_OK );
+     }
 
      if (ret) {
-         /* otherwise fall back on an image in PNG format */
-         snprintf( path, len, DATADIR"/%s.png", name );
-         ret = direct_access( path, R_OK );
+          /* otherwise fall back on an image in PNG format */
+          snprintf( path, len, DATADIR"/%s.png", name );
+          ret = direct_access( path, R_OK );
      }
 
      return ret ? NULL : D_STRDUP( path );
@@ -112,12 +116,15 @@ lite_open( int   *argc,
                image_paths[6] = get_image_path( DEFAULT_WINDOW_BOTTOM_LEFT_FRAME );
                image_paths[7] = get_image_path( DEFAULT_WINDOW_BOTTOM_RIGHT_FRAME );
 
-               ret = lite_new_window_theme( &bg_color, image_paths, &liteDefaultWindowTheme );
-               if (ret != DFB_OK)
-                    goto error;
+               ret = lite_new_window_theme( &bg_color,
+                                            DEFAULT_WINDOW_TITLE_FONT, LITE_FONT_PLAIN, 16, DEFAULT_FONT_ATTRIBUTE,
+                                            image_paths, &liteDefaultWindowTheme );
 
                for (i = 0; i < LITE_THEME_FRAME_PART_NUM; i++)
                     D_FREE( (char*) image_paths[i] );
+
+               if (ret != DFB_OK)
+                    goto error;
           }
 
           /* default button theme */
@@ -131,31 +138,34 @@ lite_open( int   *argc,
           image_paths[6] = get_image_path( DEFAULT_BUTTON_IMAGE_NORMAL_ON );
 
           ret = lite_new_button_theme( image_paths, &liteDefaultButtonTheme );
-          if (ret != DFB_OK)
-               goto error;
 
           for (i = 0; i < LITE_BS_MAX; i++)
                D_FREE( (char*) image_paths[i] );
+
+          if (ret != DFB_OK)
+               goto error;
 
           /* default check theme */
 
           image_paths[0] = get_image_path( DEFAULT_CHECK_IMAGE );
 
           ret = lite_new_check_theme( image_paths[0], &liteDefaultCheckTheme );
-          if (ret != DFB_OK)
-               goto error;
 
           D_FREE( (char*) image_paths[0] );
+
+          if (ret != DFB_OK)
+               goto error;
 
           /* default list theme */
 
           image_paths[0] = get_image_path( DEFAULT_SCROLLBAR_IMAGE );
 
           ret = lite_new_list_theme( image_paths[0], 3, &liteDefaultListTheme );
-          if (ret != DFB_OK)
-               goto error;
 
           D_FREE( (char*) image_paths[0] );
+
+          if (ret != DFB_OK)
+               goto error;
 
           /* default progress bar theme */
 
@@ -163,31 +173,34 @@ lite_open( int   *argc,
           image_paths[1] = get_image_path( DEFAULT_PROGRESSBAR_IMAGE_BG );
 
           ret = lite_new_progressbar_theme( image_paths[0], image_paths[1], &liteDefaultProgressBarTheme );
-          if (ret != DFB_OK)
-               goto error;
 
           D_FREE( (char*) image_paths[0] );
           D_FREE( (char*) image_paths[1] );
+
+          if (ret != DFB_OK)
+               goto error;
 
           /* default scrollbar theme */
 
           image_paths[0] = get_image_path( DEFAULT_SCROLLBAR_IMAGE );
 
           ret = lite_new_scrollbar_theme( image_paths[0], 3, &liteDefaultScrollbarTheme );
-          if (ret != DFB_OK)
-               goto error;
 
           D_FREE( (char*) image_paths[0] );
+
+          if (ret != DFB_OK)
+               goto error;
 
           /* default text button theme */
 
           image_paths[0] = get_image_path( DEFAULT_TEXTBUTTON_IMAGE );
 
           ret = lite_new_text_button_theme( image_paths[0], &liteDefaultTextButtonTheme );
-          if (ret != DFB_OK)
-               goto error;
 
           D_FREE( (char*) image_paths[0] );
+
+          if (ret != DFB_OK)
+               goto error;
 
           /* default cursor */
 
@@ -195,10 +208,11 @@ lite_open( int   *argc,
                image_paths[0] = get_image_path( DEFAULT_WINDOW_CURSOR );
 
                ret = lite_load_cursor_from_file( &lite_cursor, image_paths[0] );
-               if (ret != DFB_OK)
-                    goto error;
 
                D_FREE( (char*) image_paths[0] );
+
+               if (ret != DFB_OK)
+                    goto error;
 
                ret = lite_set_current_cursor( &lite_cursor );
                if (ret != DFB_OK)

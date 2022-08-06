@@ -274,14 +274,6 @@ lite_new_window( IDirectFBDisplayLayer  *layer,
      if (theme != liteNoWindowTheme) {
           DFBDimension size = { window->width, window->height };
 
-          /* load title font */
-          ret = lite_get_font( DEFAULT_WINDOW_TITLE_FONT, LITE_FONT_PLAIN, 16, DEFAULT_FONT_ATTRIBUTE,
-                               &window->title_font );
-          if (ret != DFB_OK) {
-               D_FREE( theme );
-               return ret;
-          }
-
           /* default titles are black and centered horizontally */
           window->title_color.r  = 0;
           window->title_color.g  = 0;
@@ -1765,9 +1757,6 @@ destroy_window_data( LiteWindow *window )
 
      lite_release_window_drag_box( window );
 
-     if (window->title_font)
-          lite_release_font( window->title_font );
-
      if (window->title)
           D_FREE( window->title );
 
@@ -1775,8 +1764,7 @@ destroy_window_data( LiteWindow *window )
 
      lite_destroy_box( &window->box );
 
-     if (window->surface)
-          window->surface->Release( window->surface );
+     window->surface->Release( window->surface );
 
      if (window->window)
           window->window->Destroy( window->window );
@@ -1990,9 +1978,13 @@ lite_on_window_wheel( LiteWindow          *window,
 }
 
 DFBResult
-lite_new_window_theme( const DFBColor   *bg_color,
-                       const char       *image_paths[LITE_THEME_FRAME_PART_NUM],
-                       LiteWindowTheme **ret_theme )
+lite_new_window_theme( const DFBColor     *bg_color,
+                       const char         *spec,
+                       LiteFontStyle       style,
+                       int                 size,
+                       DFBFontAttributes   attr,
+                       const char         *image_paths[LITE_THEME_FRAME_PART_NUM],
+                       LiteWindowTheme   **ret_theme )
 {
      DFBResult        ret;
      LiteWindowTheme *theme;
@@ -2009,9 +2001,17 @@ lite_new_window_theme( const DFBColor   *bg_color,
      /* configure the default background color */
      theme->theme.bg_color = *bg_color;
 
-     /* load window frame bitmaps */
+     /* load title font */
+     ret = lite_get_font( spec, style, size, attr, &theme->title_font );
+     if (ret != DFB_OK) {
+          D_FREE( theme );
+          return ret;
+     }
+
+     /* load frame bitmaps */
      ret = lite_theme_frame_load( &theme->frame, image_paths );
      if (ret != DFB_OK) {
+          lite_release_font( theme->title_font );
           D_FREE( theme );
           return ret;
      }
@@ -2029,6 +2029,8 @@ lite_destroy_window_theme( LiteWindowTheme *theme )
      LITE_NULL_PARAMETER_CHECK( theme );
 
      D_DEBUG_AT( LiteWindowDomain, "Destroy window theme: %p\n", theme );
+
+     lite_release_font( theme->title_font );
 
      lite_theme_frame_unload( &theme->frame );
 
@@ -2075,7 +2077,7 @@ render_title( LiteWindow *window )
 
      D_ASSERT( window != NULL );
 
-     ret = lite_font( window->title_font, &font );
+     ret = lite_font( window->theme->title_font, &font );
      if (ret != DFB_OK)
           return;
 
@@ -2091,7 +2093,7 @@ render_title( LiteWindow *window )
                            &window->frame_target[LITE_THEME_FRAME_PART_TOP] );
 
      /* draw title */
-     if (window->title && font) {
+     if (window->title) {
           int x, y;
 
           surface->SetColor( surface, window->title_color.r, window->title_color.g, window->title_color.b,
@@ -2630,7 +2632,7 @@ handle_button( LiteWindow     *window,
                               int            string_width;
                               IDirectFBFont *font;
 
-                              lite_font( window->title_font, &font );
+                              lite_font( window->theme->title_font, &font );
                               font->GetStringWidth( font, window->title, -1, &string_width );
 
                               /* title double click */
