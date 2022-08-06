@@ -3,7 +3,7 @@
 - Added lite_get_progressbar_value(), lite_get_text_button_state()
 - Added LITE_BOUNDING_UPDATES and LITE_DEBUG_UPDATES environment variables
 - Back to widgets built inside the LiTE library
-- Create default widget theme during lite_open() sequence
+- Create default theme for widgets during lite_open() sequence
 - Meson build system
 - Replace LITE_NO_THEME with LITE_NO_FRAME
 
@@ -19,7 +19,7 @@
 
 0.8.8 (June 21 2008)
 -----
-- Move widgets into new library called LeCK, LiTE's extended Component Kit
+- Move widgets to a new library called LeCK, LiTE's extended Component Kit
 
 0.8.7 (June 9 2008)
 -----
