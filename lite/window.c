@@ -182,7 +182,7 @@ lite_new_window( IDirectFBDisplayLayer  *layer,
 
      /* set cursor shape */
      if (cursor)
-          window->window->SetCursorShape( window->window, cursor->surface, cursor->hot_x, cursor->hot_y );
+          lite_set_window_cursor( window, cursor );
 
      /* get ID */
      window->window->GetID( window->window, &window->id );
@@ -2030,9 +2030,9 @@ lite_destroy_window_theme( LiteWindowTheme *theme )
 
      D_DEBUG_AT( LiteWindowDomain, "Destroy window theme: %p\n", theme );
 
-     lite_release_font( theme->title_font );
-
      lite_theme_frame_unload( &theme->frame );
+
+     lite_release_font( theme->title_font );
 
      D_FREE( theme );
 
