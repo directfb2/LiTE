@@ -1,3 +1,24 @@
+commit 1616fc50580cc2ad2f5485a06568bb52d5efeec4
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Tue Aug 9 03:47:06 2022 +0200
+
+    Set window cursor flags
+
+commit 2c65812a2df1c34a24c7eb39754c3d72afe8f8d3
+Merge: 082d21e 4bb1da8
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Sat Aug 6 12:57:16 2022 +0200
+
+    Merge pull request #3 from caramelli/master
+    
+    Add LITE_NO_DGIFF and LITE_NO_DFIFF environment variables
+
+commit 4bb1da853056b913ac5b70445746d22f6c738d88
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Sat Aug 6 12:36:00 2022 +0200
+
+    Update ChangeLog
+
 commit 636aeaa23914237dd3b8338a55579b5460390187
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Sat Aug 6 12:35:20 2022 +0200
