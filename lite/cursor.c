@@ -95,15 +95,24 @@ DFBResult
 lite_set_window_cursor( LiteWindow *window,
                         LiteCursor *cursor )
 {
-     DFBResult ret = DFB_OK;
+     DFBResult ret;
 
      LITE_NULL_PARAMETER_CHECK( window );
      LITE_NULL_PARAMETER_CHECK( cursor );
 
      D_DEBUG_AT( LiteCursorDomain, "Set cursor: %p for window: %p\n", cursor, window );
 
-     if (cursor->surface)
-          ret = window->window->SetCursorShape( window->window, cursor->surface, cursor->hot_x, cursor->hot_y );
+     ret = window->window->SetCursorFlags( window->window, cursor->surface ? DWCF_NONE : DWCF_INVISIBLE );
+     if (ret) {
+          DirectFBError( "LiTE/Cursor: SetCursorFlags() failed", ret );
+          return ret;
+     }
+
+     ret = window->window->SetCursorShape( window->window, cursor->surface, cursor->hot_x, cursor->hot_y );
+     if (ret) {
+          DirectFBError( "LiTE/Cursor: SetCursorShape() failed", ret );
+          return ret;
+     }
 
      return ret;
 }
@@ -127,13 +136,27 @@ lite_show_cursor()
 DFBResult
 lite_change_cursor_opacity( u8 opacity )
 {
-     DFBResult ret = DFB_OK;
+     DFBResult ret;
 
      D_DEBUG_AT( LiteCursorDomain, "Change cursor opacity to: %d\n", opacity );
 
      ret = lite_layer->SetCooperativeLevel( lite_layer, DLSCL_ADMINISTRATIVE );
+     if (ret) {
+          DirectFBError( "LiTE/Cursor: SetCooperativeLevel() failed", ret );
+          return ret;
+     }
+
      ret = lite_layer->SetCursorOpacity( lite_layer, opacity );
+     if (ret) {
+          DirectFBError( "LiTE/Cursor: SetCursorOpacity() failed", ret );
+          return ret;
+     }
+
      ret = lite_layer->SetCooperativeLevel( lite_layer, DLSCL_SHARED );
+     if (ret) {
+          DirectFBError( "LiTE/Cursor: SetCooperativeLevel() failed", ret );
+          return ret;
+     }
 
      cursor_opacity_global = opacity;
 
