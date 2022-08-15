@@ -239,6 +239,27 @@ error:
           lite_cursor.surface = NULL;
      }
 
+     if (liteDefaultTextButtonTheme)
+          lite_destroy_text_button_theme( liteDefaultTextButtonTheme );
+
+     if (liteDefaultScrollbarTheme)
+          lite_destroy_scrollbar_theme( liteDefaultScrollbarTheme );
+
+     if (liteDefaultProgressBarTheme)
+          lite_destroy_progressbar_theme( liteDefaultProgressBarTheme );
+
+     if (liteDefaultListTheme)
+          lite_destroy_list_theme( liteDefaultListTheme );
+
+     if (liteDefaultCheckTheme)
+          lite_destroy_check_theme( liteDefaultCheckTheme );
+
+     if (liteDefaultButtonTheme)
+          lite_destroy_button_theme( liteDefaultButtonTheme );
+
+     if (liteDefaultWindowTheme)
+          lite_destroy_window_theme( liteDefaultWindowTheme );
+
      if (lite_layer) {
           lite_layer->Release( lite_layer );
           lite_layer = NULL;

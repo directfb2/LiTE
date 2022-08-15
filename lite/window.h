@@ -548,7 +548,6 @@ DFBResult lite_set_window_bounds           ( LiteWindow   *window,
  * @param[out] ret_height                    Window height
  *
  * @return DFB_OK if successful.
- *
  */
 DFBResult lite_get_window_size             ( LiteWindow *window,
                                              int        *ret_width,
