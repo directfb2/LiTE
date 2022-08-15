@@ -1,6 +1,7 @@
 0.9.1
 -----
 - Added lite_get_progressbar_value(), lite_get_text_button_state()
+- Added lite_get_image_description(), lite_get_image_size()
 - Added LITE_BOUNDING_UPDATES and LITE_DEBUG_UPDATES environment variables
 - Back to widgets built inside the LiTE library
 - Create default theme for widgets during lite_open() sequence

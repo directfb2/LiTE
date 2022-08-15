@@ -32,6 +32,7 @@ struct _LiteImage {
      LiteImageTheme          *theme;
 
      DFBRectangle             clipping_rect;
+     int                      width, height;
      IDirectFBSurface        *surface;
      DFBImageDescription      desc;
      DFBSurfaceBlittingFlags  blitting_flags;
@@ -91,7 +92,7 @@ lite_load_image( LiteImage  *image,
 
      D_DEBUG_AT( LiteImageDomain, "Load image: %p from file: %s\n", image, filename );
 
-     ret = prvlite_load_image( filename, &surface, NULL, NULL, &image->desc );
+     ret = prvlite_load_image( filename, &surface, &image->width, &image->height, &image->desc );
      if (ret != DFB_OK)
           return ret;
 
@@ -134,11 +135,33 @@ DFBResult
 lite_get_image_description( LiteImage           *image,
                             DFBImageDescription *ret_desc )
 {
+     LITE_NULL_PARAMETER_CHECK( image );
+     LITE_NULL_PARAMETER_CHECK( ret_desc );
+     LITE_BOX_TYPE_PARAMETER_CHECK( image, LITE_TYPE_IMAGE );
+
      D_DEBUG_AT( LiteImageDomain, "image: %p has %salphachannel and %scolorkey\n", image,
                  (image->desc.caps & DICAPS_ALPHACHANNEL) ? "" : "no ",
                  (image->desc.caps & DICAPS_COLORKEY)     ? "" : "no " );
 
      *ret_desc = image->desc;
+
+     return DFB_OK;
+}
+
+DFBResult
+lite_get_image_size( LiteImage *image,
+                     int       *ret_width,
+                     int       *ret_height )
+{
+     LITE_NULL_PARAMETER_CHECK( image );
+     LITE_NULL_PARAMETER_CHECK( ret_width );
+     LITE_NULL_PARAMETER_CHECK( ret_height );
+     LITE_BOX_TYPE_PARAMETER_CHECK( image, LITE_TYPE_IMAGE );
+
+     D_DEBUG_AT( LiteWindowDomain, "image: %p has a size of: %dx%d\n", image, image->width, image->height );
+
+     *ret_width  = image->width;
+     *ret_height = image->height;
 
      return DFB_OK;
 }

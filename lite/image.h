@@ -83,7 +83,7 @@ DFBResult lite_load_image                  ( LiteImage  *image,
  *
  * This function will set the image clipping area for the blitting
  * operation. If not specified, the image will be stretch blitted
- * to its destination
+ * to its destination.
  *
  * @param[in]  image                         Valid LiteImage object
  * @param[in]  rect                          Rectangle for image source
@@ -105,6 +105,21 @@ DFBResult lite_set_image_clipping          ( LiteImage          *image,
  */
 DFBResult lite_get_image_description       ( LiteImage           *image,
                                              DFBImageDescription *ret_desc );
+
+/**
+ * @brief Get image size.
+ *
+ * This function will retrieve the size of the image.
+ *
+ * @param[in]  image                         Valid LiteImage object
+ * @param[out] ret_width                     Image width
+ * @param[out] ret_height                    Image height
+ *
+ * @return DFB_OK if successful.
+ */
+DFBResult lite_get_image_size              ( LiteImage *image,
+                                             int       *ret_width,
+                                             int       *ret_height );
 
 #ifdef __cplusplus
 }

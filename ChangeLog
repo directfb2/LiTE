@@ -1,3 +1,24 @@
+commit 988e921edbf59fc0305521cf1b50eb58648dfc18
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Mon Aug 15 02:46:21 2022 +0200
+
+    image: Add lite_get_image_size()
+
+commit 9f471fceeda78f124052772e51687b9bd89d1f8c
+Merge: 2c65812 5542ce8
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Tue Aug 9 03:55:59 2022 +0200
+
+    Merge pull request #4 from caramelli/master
+    
+    Set window cursor flags
+
+commit 5542ce8fc837ab298617f512ffb06833ab587771
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Tue Aug 9 03:47:19 2022 +0200
+
+    Update ChangeLog
+
 commit 1616fc50580cc2ad2f5485a06568bb52d5efeec4
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Tue Aug 9 03:47:06 2022 +0200
