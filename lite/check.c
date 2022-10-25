@@ -121,6 +121,8 @@ lite_set_check_caption( LiteCheck  *check,
      if (!strcmp( check->caption_text, caption_text ))
           return DFB_OK;
 
+     D_FREE( check->caption_text );
+
      check->caption_text = D_STRDUP( caption_text );
 
      return lite_update_box( LITE_BOX(check), NULL );
@@ -216,7 +218,7 @@ lite_set_check_all_images( LiteCheck  *check,
           check->all_images.height  = 0;
      }
 
-     return DFB_OK;
+     return lite_update_box( LITE_BOX(check), NULL );
 }
 
 DFBResult

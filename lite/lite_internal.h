@@ -21,7 +21,7 @@
 
 #include <directfb.h>
 
-/* test for NULL parameter and return DFB_INVARG */
+/* test for NULL parameter, return DFB_INVARG if NULL */
 #define LITE_NULL_PARAMETER_CHECK(exp) \
     do {                               \
         if ((exp) == NULL) {           \

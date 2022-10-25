@@ -443,9 +443,9 @@ cache_release_entry( LiteFont *entry )
 DFBResult
 prvlite_release_font_resources()
 {
-     LiteFont *entry;
+     LiteFont *entry, *temp;
 
-     for (entry = fonts; entry; entry = entry->next) {
+     for (entry = fonts, temp = entry ? entry->next : NULL; entry; entry = temp, temp = entry ? entry->next : NULL) {
           entry->font->Release( entry->font );
           D_FREE( entry->file );
           D_FREE( entry );

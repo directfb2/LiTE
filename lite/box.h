@@ -193,6 +193,8 @@ DFBResult lite_update_box                  ( LiteBox         *box,
  * @brief Destroy a LiteBox.
  *
  * This function will destroy a LiteBox and all of its children.
+ * The default Destroy() callback of a LiteBox points to this
+ * function.
  *
  * @param[in]  box                           Valid LiteBox
  *

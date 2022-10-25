@@ -173,23 +173,12 @@ DFBResult lite_get_scroll_info             ( LiteScrollbar  *scrollbar,
  *
  * @param[in]  scrollbar                     Valid LiteScrollbar object
  * @param[in]  image_path                    File path with image for all scrollbar subsections (button1, button2, thumb)
- *
- * @return DFB_OK if successful.
- */
-DFBResult lite_set_scrollbar_all_images    ( LiteScrollbar *scrollbar,
-                                             const char    *image_path );
-
-/**
- * @brief Set the margin in pixels for the thumb image.
- *
- * This function will set the margin in pixels for the thumb image.
- *
- * @param[in]  scrollbar                     Valid LiteScrollbar object
  * @param[in]  image_margin                  Thumb image pixel margin
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_set_scrollbar_image_margin  ( LiteScrollbar *scrollbar,
+DFBResult lite_set_scrollbar_all_images    ( LiteScrollbar *scrollbar,
+                                             const char    *image_path,
                                              int            image_margin );
 
 /**
@@ -214,7 +203,7 @@ DFBResult lite_on_scrollbar_update         ( LiteScrollbar           *scrollbar,
  * This function makes the theme.
  *
  * @param[in]  image_path                    File path with image for all scrollbar subsections (button1, button2, thumb)
- * @param[in]  image_margin                  Thumb subsection pixel margin
+ * @param[in]  image_margin                  Thumb image pixel margin
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.

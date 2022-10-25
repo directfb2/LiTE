@@ -1486,7 +1486,7 @@ int
 lite_handle_window_event( LiteWindow     *window,
                           DFBWindowEvent *event )
 {
-     int       result;
+     int       result = 0;
      DFBResult ret;
 
      D_DEBUG_AT( LiteWindowDomain, "Handle event: %p for window: %p\n", event, window );
@@ -2270,6 +2270,8 @@ handle_destroy( LiteWindow *window )
           ret = window->OnDestroy( window );
 
      if (window->window) {
+          event_buffer_global->WaitForEvent( event_buffer_global );
+
           window->window->DetachEventBuffer( window->window, event_buffer_global );
 
           event_buffer_global->Release( event_buffer_global );

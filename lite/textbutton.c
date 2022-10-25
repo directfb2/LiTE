@@ -223,7 +223,7 @@ lite_set_text_button_all_images( LiteTextButton *textbutton,
           textbutton->all_images.height  = 0;
      }
 
-     return DFB_OK;
+     return lite_update_box( LITE_BOX(textbutton), NULL );
 }
 
 DFBResult

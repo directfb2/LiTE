@@ -214,10 +214,15 @@ lite_destroy_box( LiteBox *box )
      box->surface->Release( box->surface );
 
      if (box->children)
-        D_FREE( box->children );
+          D_FREE( box->children );
 
      box->children   = NULL;
      box->n_children = 0;
+
+     if (box->type != LITE_TYPE_WINDOW) {
+          D_FREE( box );
+          box = NULL;
+     }
 
      return DFB_OK;
 }

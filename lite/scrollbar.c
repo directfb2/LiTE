@@ -262,7 +262,8 @@ lite_get_scroll_info( LiteScrollbar  *scrollbar,
 
 DFBResult
 lite_set_scrollbar_all_images( LiteScrollbar *scrollbar,
-                               const char    *image_path )
+                               const char    *image_path,
+                               int            image_margin )
 {
      LITE_NULL_PARAMETER_CHECK( scrollbar );
      LITE_BOX_TYPE_PARAMETER_CHECK( scrollbar, LITE_TYPE_SCROLLBAR );
@@ -284,29 +285,17 @@ lite_set_scrollbar_all_images( LiteScrollbar *scrollbar,
           scrollbar->all_images.surface = all_images_surface;
           scrollbar->all_images.width   = all_images_width;
           scrollbar->all_images.height  = all_images_height;
+          scrollbar->image_margin       = image_margin;
      }
      else if (scrollbar->all_images.surface) {
           scrollbar->all_images.surface->Release( scrollbar->all_images.surface );
           scrollbar->all_images.surface = NULL;
           scrollbar->all_images.width   = 0;
           scrollbar->all_images.height  = 0;
+          scrollbar->image_margin       = 0;
      }
 
-     return DFB_OK;
-}
-
-DFBResult
-lite_set_scrollbar_image_margin( LiteScrollbar *scrollbar,
-                                 int            image_margin )
-{
-     LITE_NULL_PARAMETER_CHECK( scrollbar );
-     LITE_BOX_TYPE_PARAMETER_CHECK( scrollbar, LITE_TYPE_SCROLLBAR );
-
-     D_DEBUG_AT( LiteScrollbarDomain, "Set scrollbar: %p with thumb image margin: %d\n", scrollbar, image_margin );
-
-     scrollbar->image_margin = image_margin;
-
-     return DFB_OK;
+     return lite_update_box( LITE_BOX(scrollbar), NULL );
 }
 
 DFBResult
