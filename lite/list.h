@@ -322,7 +322,7 @@ DFBResult lite_list_on_sel_change          ( LiteList              *list,
  * This function makes the theme.
  *
  * @param[in]  image_path                    File path with image for all scrollbar subsections (button1, button2, thumb)
- * @param[in]  image_margin                  Thumb subsection pixel margin
+ * @param[in]  image_margin                  Thumb image pixel margin
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.

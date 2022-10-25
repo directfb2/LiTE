@@ -95,13 +95,13 @@ typedef struct {
 extern LiteWindowTheme *liteDefaultWindowTheme;
 
 /** @brief Window event callback. */
-typedef DFBResult (*LiteWindowEventFunc) (DFBWindowEvent* evt, void *data);
+typedef DFBResult (*LiteWindowEventFunc)( DFBWindowEvent* evt, void *data );
 
 /** @brief Window universal event callback. */
-typedef DFBResult (*LiteWindowUniversalEventFunc) (DFBUniversalEvent* evt, void *data);
+typedef DFBResult (*LiteWindowUniversalEventFunc)( DFBUniversalEvent* evt, void *data );
 
 /** @brief Window user event callback. */
-typedef DFBResult (*LiteWindowUserEventFunc) (DFBUserEvent* evt, void *data);
+typedef DFBResult (*LiteWindowUserEventFunc)( DFBUserEvent* evt, void *data );
 
 /** @brief LiteWindow structure. */
 typedef struct _LiteWindow {

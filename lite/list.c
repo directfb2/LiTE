@@ -457,6 +457,9 @@ DFBResult lite_set_list_scrollbar( LiteList      *list,
 
      list->scrollbar = scrollbar;
 
+     if (list->scrollbar)
+          lite_on_scrollbar_update( list->scrollbar, scrollbar_updated, list );
+
      return DFB_OK;
 }
 
