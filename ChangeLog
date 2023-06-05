@@ -1,3 +1,24 @@
+commit 722a58dba737d2a41a0016273d2ecd52735716cd
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Mon Jun 5 11:33:07 2023 +0200
+
+    Add build options to use generated headers containing font/image data
+
+commit 1446944955b45b54c26405455b0949b34439d942
+Merge: 1f9a048 26f9183
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Tue Oct 25 03:29:41 2022 +0200
+
+    Merge pull request #6 from caramelli/master
+    
+    LiTE/Box: Reintroduced memory freeing of a LiteBox object in lite_destroy_box()
+
+commit 26f9183db97985b037224208d63aa8811c195fe1
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Tue Oct 25 03:20:59 2022 +0200
+
+    Update ChangeLog
+
 commit cd3de3f75d6bf493bc586cd96fa56707aab9f787
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Tue Oct 25 03:20:27 2022 +0200
