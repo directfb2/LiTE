@@ -65,7 +65,6 @@
 
 0.7.2 (May 5 2006)
 -----
-- Added lite_get_font_filename()
 - Collect window updates into up to 4 different regions, making updates faster
 
 0.7.1 (February 2 2006)
@@ -170,7 +169,7 @@
 
 0.2.0 (February 15 2005)
 -----
-- Add DFBFontAttributes argument to lite_get_font() / lite_get_font_from_file()
+- Add DFBFontAttributes argument to lite_get_font()
 - Added lite_get_dfb_interface()
 - Added lite_set_active_font() and lite_get_active_font()
 - Added text color support to label widget

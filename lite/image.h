@@ -71,12 +71,14 @@ DFBResult lite_new_image                   ( LiteBox         *parent,
  * This function will load an image.
  *
  * @param[in]  image                         Valid LiteImage object
- * @param[in]  filename                      File path with an image
+ * @param[in]  file_data                     File data (file path or data pointer) with an image
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_load_image                  ( LiteImage  *image,
-                                             const char *filename );
+DFBResult lite_load_image                  ( LiteImage    *image,
+                                             const void   *file_data,
+                                             unsigned int  length );
 
 /**
  * @brief Set the image clipping area.

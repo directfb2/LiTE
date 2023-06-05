@@ -262,20 +262,22 @@ lite_get_scroll_info( LiteScrollbar  *scrollbar,
 
 DFBResult
 lite_set_scrollbar_all_images( LiteScrollbar *scrollbar,
-                               const char    *image_path,
+                               const void    *file_data,
+                               unsigned int   length,
                                int            image_margin )
 {
      LITE_NULL_PARAMETER_CHECK( scrollbar );
      LITE_BOX_TYPE_PARAMETER_CHECK( scrollbar, LITE_TYPE_SCROLLBAR );
 
-     D_DEBUG_AT( LiteScrollbarDomain, "Set scrollbar: %p with image: %s for all subsections\n", scrollbar, image_path );
+     D_DEBUG_AT( LiteScrollbarDomain, "Set scrollbar: %p\n", scrollbar );
 
-     if (image_path) {
+     if (file_data) {
           DFBResult         ret;
           int               all_images_width, all_images_height;
           IDirectFBSurface *all_images_surface;
 
-          ret = prvlite_load_image( image_path, &all_images_surface, &all_images_width, &all_images_height, NULL );
+          ret = prvlite_load_image( file_data, length, &all_images_surface,
+                                    &all_images_width, &all_images_height, NULL );
           if (ret != DFB_OK)
                return ret;
 
@@ -314,14 +316,15 @@ lite_on_scrollbar_update( LiteScrollbar           *scrollbar,
      return DFB_OK;
 }
 
-DFBResult lite_new_scrollbar_theme( const char          *image_path,
+DFBResult lite_new_scrollbar_theme( const void          *file_data,
+                                    unsigned int         length,
                                     int                  image_margin,
                                     LiteScrollbarTheme **ret_theme )
 {
      DFBResult           ret;
      LiteScrollbarTheme *theme;
 
-     LITE_NULL_PARAMETER_CHECK( image_path );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_NULL_PARAMETER_CHECK( ret_theme );
 
      if (liteDefaultScrollbarTheme && *ret_theme == liteDefaultScrollbarTheme)
@@ -331,7 +334,7 @@ DFBResult lite_new_scrollbar_theme( const char          *image_path,
 
      theme->image_margin = image_margin;
 
-     ret = prvlite_load_image( image_path, &theme->all_images.surface,
+     ret = prvlite_load_image( file_data, length, &theme->all_images.surface,
                                &theme->all_images.width, &theme->all_images.height, NULL );
      if (ret != DFB_OK) {
           D_FREE( theme );

@@ -55,16 +55,15 @@ lite_headers = [
 ]
 
 liblite = library('lite-@0@.@1@'.format(lite_major_version, lite_minor_version),
-                  lite_sources,
-                  include_directories: config_inc,
-                  c_args: '-DDATADIR="@0@"'.format(litedatadir),
+                  [lite_sources, rawdata_hdrs],
+                  include_directories: include_directories('..'),
                   dependencies: directfb_dep,
                   version: '@0@.0.0'.format(lite_micro_version),
                   install: true)
 
-meson.add_install_script(join_paths(meson.source_root(), 'meson_symlink.sh'),
-                         'liblite-@0@.@1@.so'.format(lite_major_version, lite_minor_version),
-                         join_paths(get_option('prefix'), get_option('libdir'), 'liblite.so'))
+install_symlink('liblite' + libsuffix,
+                pointing_to: 'liblite-@0@.@1@'.format(lite_major_version, lite_minor_version) + libsuffix,
+                install_dir: join_paths(get_option('prefix'), get_option('libdir')))
 
 install_headers(lite_headers, subdir: 'lite')
 

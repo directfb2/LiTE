@@ -17,3 +17,15 @@
 option('fontdir',
        type: 'string',
        description: 'LiTE font directory')
+
+option('font-headers',
+       type: 'combo',
+       value: 'disabled',
+       choices: ['disabled', 'dgiff', 'ttf'],
+       description: 'Use generated font headers')
+
+option('image-headers',
+       type: 'combo',
+       value: 'disabled',
+       choices: ['disabled', 'dfiff', 'png'],
+       description: 'Use generated image headers')

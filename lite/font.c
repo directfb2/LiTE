@@ -16,11 +16,24 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 */
 
-#include <config.h>
 #include <direct/thread.h>
 #include <lite/font.h>
 #include <lite/lite_config.h>
 #include <lite/lite_internal.h>
+
+#ifndef LITEFONTDIR
+#include "Vera.h"
+#include "VeraBd.h"
+#include "VeraIt.h"
+#include "VeraBI.h"
+#include "VeraMo.h"
+#include "VeraMoBd.h"
+#include "VeraMoIt.h"
+#include "VeraMoBI.h"
+#include "VeraSe.h"
+#include "VeraSeBd.h"
+#include "whitrabt.h"
+#endif
 
 D_DEBUG_DOMAIN( LiteFontDomain, "LiTE/Font", "LiTE Font" );
 
@@ -29,7 +42,7 @@ D_DEBUG_DOMAIN( LiteFontDomain, "LiTE/Font", "LiTE Font" );
 struct _LiteFont {
      int                refs;
 
-     char              *file;
+     char              *id;
      int                size;
      IDirectFBFont     *font;
      DFBFontAttributes  attr;
@@ -45,10 +58,54 @@ char *lite_font_styles[4] = {
 static LiteFont    *fonts       = NULL;
 static DirectMutex  fonts_mutex = DIRECT_MUTEX_INITIALIZER();
 
+#ifndef LITEFONTDIR
+struct LiteFontData {
+     const char *name;
+     const void *data;
+};
+
+static const struct LiteFontData font_data[] = {
+  { "Vera",     Vera_data     },
+  { "VeraBd",   VeraBd_data   },
+  { "VeraIt",   VeraIt_data   },
+  { "VeraBI",   VeraBI_data   },
+  { "VeraMo",   VeraMo_data   },
+  { "VeraMoBd", VeraMoBd_data },
+  { "VeraMoIt", VeraMoIt_data },
+  { "VeraMoBI", VeraMoBI_data },
+  { "VeraSe",   VeraSe_data   },
+  { "VeraSeBd", VeraSeBd_data },
+  { "whitrabt", whitrabt_data }
+};
+
+struct LiteFontSize {
+     const char   *name;
+     unsigned int  size;
+};
+
+static const struct LiteFontSize font_size[] = {
+  { "Vera",     sizeof(Vera_data)     },
+  { "VeraBd",   sizeof(VeraBd_data)   },
+  { "VeraIt",   sizeof(VeraIt_data)   },
+  { "VeraBI",   sizeof(VeraBI_data)   },
+  { "VeraMo",   sizeof(VeraMo_data)   },
+  { "VeraMoBd", sizeof(VeraMoBd_data) },
+  { "VeraMoIt", sizeof(VeraMoIt_data) },
+  { "VeraMoBI", sizeof(VeraMoBI_data) },
+  { "VeraSe",   sizeof(VeraSe_data)   },
+  { "VeraSeBd", sizeof(VeraSeBd_data) },
+  { "whitrabt", sizeof(whitrabt_data) }
+};
+#endif
+
 /* return an existing font entry from the cache after increasing its reference count, otherwise try creating a new one
-   from the default font directory by specifying a font name or from a file path with a font */
-static LiteFont *cache_get_entry          ( const char *name, int size, DFBFontAttributes attr );
-static LiteFont *cache_get_entry_from_file( const char *file, int size, DFBFontAttributes attr );
+   by specifying a font file or a font name */
+static LiteFont *cache_get_entry            ( const char *name, int size, DFBFontAttributes attr );
+#ifdef LITEFONTDIR
+static LiteFont *cache_get_entry_from_file  ( const char *file, int size, DFBFontAttributes attr );
+#else
+static LiteFont *cache_get_entry_from_memory( const char *name, int size, DFBFontAttributes attr );
+#endif
 
 /* decrease the reference count of a cache entry and remove/destroy it if the count is zero */
 static void cache_release_entry( LiteFont *entry );
@@ -115,40 +172,6 @@ lite_get_font( const char         *spec,
                ret = DFB_FILENOTFOUND;
           }
      }
-
-     return ret;
-}
-
-DFBResult
-lite_get_font_from_file( const char         *font_path,
-                         int                 size,
-                         DFBFontAttributes   attr,
-                         LiteFont          **ret_font )
-{
-     DFBResult ret = DFB_OK;
-
-     LITE_NULL_PARAMETER_CHECK( font_path );
-     LITE_NULL_PARAMETER_CHECK( ret_font );
-
-     D_DEBUG_AT( LiteFontDomain, "Get font from file '%s' with size: %d and attr: 0x%x\n", font_path, size, attr );
-
-     /* get the font from the cache, if it does not exist yet it will be loaded */
-     *ret_font = cache_get_entry_from_file( font_path, size, attr );
-
-     /* if font loading failed, try to get our default font */
-     if (*ret_font == NULL) {
-          *ret_font = cache_get_entry( DEFAULT_FONT_SYSTEM, size, attr );
-
-          if (*ret_font == NULL) {
-               D_DEBUG_AT( LiteFontDomain, "  -> could not load default font '"LITEFONTDIR"/%s' for '%s'\n",
-                           DEFAULT_FONT_SYSTEM, font_path );
-               ret = DFB_FILENOTFOUND;
-          }
-          else
-               D_DEBUG_AT( LiteFontDomain, "  -> %p\n", *ret_font );
-     }
-     else
-          D_DEBUG_AT( LiteFontDomain, "  -> %p\n", *ret_font );
 
      return ret;
 }
@@ -280,17 +303,6 @@ lite_get_active_font( LiteBox   *box,
 }
 
 DFBResult
-lite_get_font_filename( LiteFont    *font,
-                        const char **ret_font_path )
-{
-     D_DEBUG_AT( LiteFontDomain, "font: %p is associated with file: '%s'\n", font, font->file );
-
-     *ret_font_path = font->file;
-
-     return DFB_OK;
-}
-
-DFBResult
 lite_get_font_attributes( LiteFont          *font,
                           DFBFontAttributes *ret_attr )
 {
@@ -303,6 +315,7 @@ lite_get_font_attributes( LiteFont          *font,
 
 /* internals */
 
+#ifdef LITEFONTDIR
 static LiteFont *
 cache_get_entry_from_file( const char        *file,
                            int                size,
@@ -320,7 +333,7 @@ cache_get_entry_from_file( const char        *file,
 
      /* look for an existing font entry in the cache */
      for (entry = fonts; entry; entry = entry->next) {
-          if (!strcmp( file, entry->file ) && size == entry->size && attr == entry->attr) {
+          if (!strcmp( file, entry->id ) && size == entry->size && attr == entry->attr) {
                entry->refs++;
 
                D_DEBUG_AT( LiteFontDomain, "Existing cache entry '%s' with size: %d and attr: 0x%x (refs %d)\n",
@@ -356,7 +369,7 @@ cache_get_entry_from_file( const char        *file,
      entry = D_CALLOC( 1, sizeof(LiteFont) );
 
      entry->refs = 1;
-     entry->file = D_STRDUP( file );
+     entry->id   = D_STRDUP( file );
      entry->size = size;
      entry->font = font;
      entry->attr = attr;
@@ -373,6 +386,102 @@ cache_get_entry_from_file( const char        *file,
 
      return entry;
 }
+#else
+static LiteFont *
+cache_get_entry_from_memory( const char        *name,
+                             int                size,
+                             DFBFontAttributes  attr )
+{
+     DFBResult                 ret;
+     int                       i;
+     DFBFontDescription        desc;
+     DFBDataBufferDescription  ddsc;
+     IDirectFBDataBuffer      *buffer;
+     IDirectFBFont            *font;
+     LiteFont                 *entry;
+
+     D_ASSERT( name != NULL );
+
+     /* lock cache */
+     direct_mutex_lock( &fonts_mutex );
+
+     /* look for an existing font entry in the cache */
+     for (entry = fonts; entry; entry = entry->next) {
+          if (!strcmp( name, entry->id ) && size == entry->size && attr == entry->attr) {
+               entry->refs++;
+
+               D_DEBUG_AT( LiteFontDomain, "Existing cache entry '%s' with size: %d and attr: 0x%x (refs %d)\n",
+                           name, size, entry->attr, entry->refs );
+
+               /* unlock cache */
+               direct_mutex_unlock( &fonts_mutex );
+
+               return entry;
+          }
+     }
+
+     D_DEBUG_AT( LiteFontDomain, "Loading cache entry '%s' with size: %d and attr: 0x%x\n", name, size, attr );
+
+     /* load the font */
+     desc.flags      = DFDESC_ATTRIBUTES | DFDESC_HEIGHT;
+     desc.attributes = attr;
+     desc.height     = size;
+
+     for (i = 0; i < D_ARRAY_SIZE(font_data); i++) {
+          if (!strcmp( name, font_data[i].name ))
+               break;
+     }
+
+     ddsc.flags         = DBDESC_MEMORY;
+     ddsc.memory.data   = font_data[i].data;
+     ddsc.memory.length = font_size[i].size;
+
+     ret = lite_dfb->CreateDataBuffer( lite_dfb, &ddsc, &buffer );
+     if (ret) {
+          DirectFBError( "LiTE/Font: CreateDataBuffer() failed", ret );
+
+          /* unlock cache */
+          direct_mutex_unlock( &fonts_mutex );
+
+          return NULL;
+     }
+
+     ret = buffer->CreateFont( buffer, &desc, &font );
+     if (ret) {
+          DirectFBError( "LiTE/Font: CreateFont() failed", ret );
+
+          buffer->Release( buffer );
+
+          /* unlock cache */
+          direct_mutex_unlock( &fonts_mutex );
+
+          return NULL;
+     }
+     else
+          D_DEBUG_AT( LiteFontDomain, "  -> interface: %p\n", font );
+
+     /* create a new entry for it */
+     entry = D_CALLOC( 1, sizeof(LiteFont) );
+
+     entry->refs = 1;
+     entry->id   = D_STRDUP( name );
+     entry->size = size;
+     entry->font = font;
+     entry->attr = attr;
+
+     /* insert into cache */
+     if (fonts) {
+          fonts->prev = entry;
+          entry->next = fonts;
+     }
+     fonts = entry;
+
+     /* unlock cache */
+     direct_mutex_unlock( &fonts_mutex );
+
+     return entry;
+}
+#endif
 
 static LiteFont *
 cache_get_entry( const char        *name,
@@ -380,6 +489,7 @@ cache_get_entry( const char        *name,
                  DFBFontAttributes  attr )
 {
      LiteFont *entry = NULL;
+#ifdef LITEFONTDIR
      int       len   = strlen( LITEFONTDIR ) + 1 + strlen( name ) + 6 + 1;
      char      file[len];
 
@@ -396,6 +506,11 @@ cache_get_entry( const char        *name,
           snprintf( file, len, LITEFONTDIR"/%s.ttf", name );
           entry = cache_get_entry_from_file( file, size, attr );
      }
+#else
+     D_ASSERT( name != NULL );
+
+     entry = cache_get_entry_from_memory( name, size, attr );
+#endif
 
      return entry;
 }
@@ -411,7 +526,7 @@ cache_release_entry( LiteFont *entry )
      /* decrease the reference count and return if not zero */
      if (--entry->refs) {
           D_DEBUG_AT( LiteFontDomain, "Decrease the reference count for cache entry '%s' with size: %d and attr: 0x%x\n",
-                      entry->file, entry->size, entry->attr );
+                      entry->id, entry->size, entry->attr );
           D_DEBUG_AT( LiteFontDomain, "  -> %p (interface: %p) now has %d refs\n", entry, entry->font, entry->refs );
 
           /* unlock cache */
@@ -421,7 +536,7 @@ cache_release_entry( LiteFont *entry )
      }
 
      D_DEBUG_AT( LiteFontDomain, "Destroying cache entry '%s' with size: %d and attr: 0x%x (interface: %p)\n",
-                 entry->file, entry->size, entry->attr, entry->font );
+                 entry->id, entry->size, entry->attr, entry->font );
 
      /* remove entry from cache */
      if (entry->next)
@@ -436,7 +551,7 @@ cache_release_entry( LiteFont *entry )
 
      /* free font resources */
      entry->font->Release( entry->font );
-     D_FREE( entry->file );
+     D_FREE( entry->id );
      D_FREE( entry );
 }
 
@@ -447,7 +562,7 @@ prvlite_release_font_resources()
 
      for (entry = fonts, temp = entry ? entry->next : NULL; entry; entry = temp, temp = entry ? entry->next : NULL) {
           entry->font->Release( entry->font );
-          D_FREE( entry->file );
+          D_FREE( entry->id );
           D_FREE( entry );
      }
 

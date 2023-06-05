@@ -193,19 +193,21 @@ lite_get_text_button_state( LiteTextButton      *textbutton,
 
 DFBResult
 lite_set_text_button_all_images( LiteTextButton *textbutton,
-                                 const char     *image_path )
+                                 const void     *file_data,
+                                 unsigned int    length )
 {
      LITE_NULL_PARAMETER_CHECK( textbutton );
      LITE_BOX_TYPE_PARAMETER_CHECK( textbutton, LITE_TYPE_TEXT_BUTTON );
 
-     D_DEBUG_AT( LiteTextButtonDomain, "Set textbutton: %p with image: %s for all states\n", textbutton, image_path );
+     D_DEBUG_AT( LiteTextButtonDomain, "Set textbutton: %p\n", textbutton );
 
-     if (image_path) {
+     if (file_data) {
           DFBResult         ret;
           int               all_images_width, all_images_height;
           IDirectFBSurface *all_images_surface;
 
-          ret = prvlite_load_image( image_path, &all_images_surface, &all_images_width, &all_images_height, NULL );
+          ret = prvlite_load_image( file_data, length, &all_images_surface,
+                                    &all_images_width, &all_images_height, NULL );
           if (ret != DFB_OK)
                return ret;
 
@@ -243,13 +245,14 @@ lite_on_text_button_press( LiteTextButton          *textbutton,
 }
 
 DFBResult
-lite_new_text_button_theme( const char           *image_path,
+lite_new_text_button_theme( const void           *file_data,
+                            unsigned int          length,
                             LiteTextButtonTheme **ret_theme )
 {
      DFBResult            ret;
      LiteTextButtonTheme *theme;
 
-     LITE_NULL_PARAMETER_CHECK( image_path );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_NULL_PARAMETER_CHECK( ret_theme );
 
      if (liteDefaultTextButtonTheme && *ret_theme == liteDefaultTextButtonTheme)
@@ -257,7 +260,7 @@ lite_new_text_button_theme( const char           *image_path,
 
      theme = D_CALLOC(1, sizeof(LiteTextButtonTheme));
 
-     ret = prvlite_load_image( image_path, &theme->all_images.surface,
+     ret = prvlite_load_image( file_data, length, &theme->all_images.surface,
                                &theme->all_images.width, &theme->all_images.height, NULL );
      if (ret != DFB_OK) {
           D_FREE( theme );

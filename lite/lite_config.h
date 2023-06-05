@@ -68,7 +68,7 @@ extern "C" {
 #define DEFAULT_WINDOW_COLOR_A            0xff
 
 /** @brief Default window cursor. */
-#define DEFAULT_WINDOW_CURSOR             "cursor"
+#define DEFAULT_WINDOW_CURSOR             "wincursor"
 
 /** @brief Default hotspot x-coordinate. */
 #define DEFAULT_WINDOW_CURSOR_HOTSPOT_X   0
@@ -109,8 +109,8 @@ extern "C" {
 /** @brief Default button image (normal and on). */
 #define DEFAULT_BUTTON_IMAGE_NORMAL_ON    "button_normal_on"
 
-/** @brief Default check image. */
-#define DEFAULT_CHECK_IMAGE               "check"
+/** @brief Default check box image. */
+#define DEFAULT_CHECKBOX_IMAGE            "checkbox"
 
 /** @brief Default progress bar image (foreground). */
 #define DEFAULT_PROGRESSBAR_IMAGE_FG      "progressbar_fg"
@@ -118,11 +118,11 @@ extern "C" {
 /** @brief Default progress bar image (background). */
 #define DEFAULT_PROGRESSBAR_IMAGE_BG      "progressbar_bg"
 
-/** @brief Default scrollbar image. */
-#define DEFAULT_SCROLLBAR_IMAGE           "scrollbar"
+/** @brief Default scrollbar box image. */
+#define DEFAULT_SCROLLBARBOX_IMAGE        "scrollbarbox"
 
-/** @brief Default text button image. */
-#define DEFAULT_TEXTBUTTON_IMAGE          "textbutton"
+/** @brief Default text button box image. */
+#define DEFAULT_TEXTBUTTONBOX_IMAGE       "textbuttonbox"
 
 #ifdef __cplusplus
 }

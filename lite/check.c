@@ -187,20 +187,22 @@ lite_get_check_state( LiteCheck      *check,
 }
 
 DFBResult
-lite_set_check_all_images( LiteCheck  *check,
-                           const char *image_path )
+lite_set_check_all_images( LiteCheck    *check,
+                           const void   *file_data,
+                           unsigned int  length )
 {
      LITE_NULL_PARAMETER_CHECK( check );
      LITE_BOX_TYPE_PARAMETER_CHECK( check, LITE_TYPE_CHECK );
 
-     D_DEBUG_AT( LiteCheckDomain, "Set check: %p with image: %s for all states\n", check, image_path );
+     D_DEBUG_AT( LiteCheckDomain, "Set check: %p\n", check );
 
-     if (image_path) {
+     if (file_data) {
           DFBResult         ret;
           int               all_images_width, all_images_height;
           IDirectFBSurface *all_images_surface;
 
-          ret = prvlite_load_image( image_path, &all_images_surface, &all_images_width, &all_images_height, NULL );
+          ret = prvlite_load_image( file_data, length, &all_images_surface,
+                                    &all_images_width, &all_images_height, NULL );
           if (ret != DFB_OK)
                return ret;
 
@@ -238,13 +240,14 @@ lite_on_check_press( LiteCheck          *check,
 }
 
 DFBResult
-lite_new_check_theme( const char      *image_path,
+lite_new_check_theme( const void      *file_data,
+                      unsigned int     length,
                       LiteCheckTheme **ret_theme )
 {
      DFBResult       ret;
      LiteCheckTheme *theme;
 
-     LITE_NULL_PARAMETER_CHECK( image_path );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_NULL_PARAMETER_CHECK( ret_theme );
 
      if (liteDefaultCheckTheme && *ret_theme == liteDefaultCheckTheme)
@@ -252,7 +255,7 @@ lite_new_check_theme( const char      *image_path,
 
      theme = D_CALLOC( 1, sizeof(LiteCheckTheme) );
 
-     ret = prvlite_load_image( image_path, &theme->all_images.surface,
+     ret = prvlite_load_image( file_data, length, &theme->all_images.surface,
                                &theme->all_images.width, &theme->all_images.height, NULL );
      if (ret != DFB_OK) {
           D_FREE( theme );

@@ -496,14 +496,15 @@ lite_list_on_sel_change( LiteList              *list,
 }
 
 DFBResult
-lite_new_list_theme( const char     *image_path,
+lite_new_list_theme( const void     *file_data,
+                     unsigned int    length,
                      int             image_margin,
                      LiteListTheme **ret_theme )
 {
      DFBResult      ret;
      LiteListTheme *theme;
 
-     LITE_NULL_PARAMETER_CHECK( image_path );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_NULL_PARAMETER_CHECK( ret_theme );
 
      if (liteDefaultListTheme && *ret_theme == liteDefaultListTheme)
@@ -511,7 +512,7 @@ lite_new_list_theme( const char     *image_path,
 
      theme = D_CALLOC( 1, sizeof(LiteListTheme) );
 
-     ret = lite_new_scrollbar_theme( image_path, image_margin, &theme->scrollbar_theme );
+     ret = lite_new_scrollbar_theme( file_data, length, image_margin, &theme->scrollbar_theme );
      if (ret != DFB_OK) {
           D_FREE( theme );
           return ret;

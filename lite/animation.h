@@ -71,7 +71,8 @@ DFBResult lite_new_animation               ( LiteBox             *parent,
  * This function will load an image containing the animation.
  *
  * @param[in]  animation                     Valid LiteAnimation object
- * @param[in]  filename                      File path with an image containing the animation frames
+ * @param[in]  file_data                     File data (file path or data pointer) with an image containing the frames
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  * @param[in]  still_frame                   Index of the animation frame
  * @param[in]  frame_width                   Width of the animation frame
  * @param[in]  frame_height                  Heigth of the animation frame
@@ -79,7 +80,8 @@ DFBResult lite_new_animation               ( LiteBox             *parent,
  * @return DFB_OK if successful.
  */
 DFBResult lite_load_animation              ( LiteAnimation *animation,
-                                             const char    *filename,
+                                             const void    *file_data,
+                                             unsigned int   length,
                                              int            still_frame,
                                              int            frame_width,
                                              int            frame_height );

@@ -145,12 +145,14 @@ DFBResult lite_get_text_button_state       ( LiteTextButton      *textbutton,
  * This function will set the images of a text button.
  *
  * @param[in]  textbutton                    Valid LiteTextButton object
- * @param[in]  image_path                    File path with image for all text button states
+ * @param[in]  file_data                     File data (file path or data pointer) with image for all text button states
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  *
  * @return DFB_OK if successful.
  */
 DFBResult lite_set_text_button_all_images  ( LiteTextButton *textbutton,
-                                             const char     *image_path );
+                                             const void     *file_data,
+                                             unsigned int    length );
 
 /**
  * @brief Install a callback function for a text button press.
@@ -173,12 +175,14 @@ DFBResult lite_on_text_button_press        ( LiteTextButton          *textbutton
  *
  * This function makes the theme.
  *
- * @param[in]  image_path                    File path with image for all text button states
+ * @param[in]  file_data                     File data (file path or data pointer) with image for all text button states
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_new_text_button_theme       ( const char           *image_path,
+DFBResult lite_new_text_button_theme       ( const void           *file_data,
+                                             unsigned int          length,
                                              LiteTextButtonTheme **ret_theme );
 
 /**

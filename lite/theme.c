@@ -24,8 +24,9 @@ D_DEBUG_DOMAIN( LiteThemeDomain, "LiTE/Theme", "LiTE Theme" );
 /**********************************************************************************************************************/
 
 DFBResult
-lite_theme_frame_load( LiteThemeFrame  *frame,
-                       const char     **filenames )
+lite_theme_frame_load( LiteThemeFrame *frame,
+                       const void     *file_data[LITE_THEME_FRAME_PART_NUM],
+                       unsigned int    length[LITE_THEME_FRAME_PART_NUM] )
 {
      DFBResult              ret;
      int                    i, y;
@@ -34,15 +35,15 @@ lite_theme_frame_load( LiteThemeFrame  *frame,
      int                    width  = 0;
      int                    height = 0;
 
-     D_DEBUG_AT( LiteThemeDomain, "%s( %p, %p )\n", __FUNCTION__, frame, filenames );
+     D_DEBUG_AT( LiteThemeDomain, "%s( %p )\n", __FUNCTION__, frame );
 
      D_ASSERT( frame != NULL );
-     D_ASSERT( filenames != NULL );
+     D_ASSERT( file_data != NULL );
 
      for (i = 0; i < LITE_THEME_FRAME_PART_NUM; i++) {
-          D_ASSERT( filenames[i] != NULL );
+          D_ASSERT( file_data[i] != NULL );
 
-          ret = prvlite_load_image( filenames[i], &frame->parts[i].source,
+          ret = prvlite_load_image( file_data[i], length[i], &frame->parts[i].source,
                                     &frame->parts[i].rect.w, &frame->parts[i].rect.h, NULL );
           if (ret != DFB_OK) {
                while (i--)
