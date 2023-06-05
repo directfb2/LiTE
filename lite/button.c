@@ -189,7 +189,8 @@ lite_get_button_state( LiteButton      *button,
 DFBResult
 lite_set_button_image( LiteButton      *button,
                        LiteButtonState  state,
-                       const char      *image_path )
+                       const void      *file_data,
+                       unsigned int     length )
 {
      LITE_NULL_PARAMETER_CHECK( button );
      LITE_BOX_TYPE_PARAMETER_CHECK( button, LITE_TYPE_BUTTON );
@@ -198,13 +199,13 @@ lite_set_button_image( LiteButton      *button,
      if (state >= LITE_BS_MAX)
           return DFB_INVARG;
 
-     D_DEBUG_AT( LiteButtonDomain, "Set button: %p for state: %u with image: %s\n", button, state, image_path );
+     D_DEBUG_AT( LiteButtonDomain, "Set button: %p for state: %u\n", button, state );
 
-     if (image_path) {
+     if (file_data) {
           DFBResult         ret;
           IDirectFBSurface *surface;
 
-          ret = prvlite_load_image( image_path, &surface, NULL, NULL, NULL );
+          ret = prvlite_load_image( file_data, length, &surface, NULL, NULL, NULL );
           if (ret != DFB_OK)
                return ret;
 
@@ -220,7 +221,7 @@ lite_set_button_image( LiteButton      *button,
      }
 
      if (state == button->state || (state == LITE_BS_DISABLED && !button->enabled)) {
-          if (image_path)
+          if (file_data)
                return lite_update_box( LITE_BOX(button), NULL );
           else
                return lite_clear_box( LITE_BOX(button), NULL );
@@ -266,14 +267,15 @@ lite_on_button_press( LiteButton          *button,
 }
 
 DFBResult
-lite_new_button_theme( const char       *image_paths[LITE_BS_MAX],
+lite_new_button_theme( const void       *file_data[LITE_BS_MAX],
+                       unsigned int      length[LITE_BS_MAX],
                        LiteButtonTheme **ret_theme )
 {
      DFBResult        ret;
      int              i;
      LiteButtonTheme *theme;
 
-     LITE_NULL_PARAMETER_CHECK( image_paths );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_NULL_PARAMETER_CHECK( ret_theme );
 
      if (liteDefaultButtonTheme && *ret_theme == liteDefaultButtonTheme)
@@ -282,8 +284,8 @@ lite_new_button_theme( const char       *image_paths[LITE_BS_MAX],
      theme = D_CALLOC( 1, sizeof(LiteButtonTheme) );
 
      for (i = 0; i < LITE_BS_MAX; i++) {
-          if (image_paths[i]) {
-               ret = prvlite_load_image( image_paths[i], &theme->surfaces[i], NULL, NULL, NULL );
+          if (file_data[i]) {
+               ret = prvlite_load_image( file_data[i], length[i], &theme->surfaces[i], NULL, NULL, NULL );
                if (ret != DFB_OK)
                     goto error;
           }

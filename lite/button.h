@@ -148,13 +148,15 @@ DFBResult lite_get_button_state            ( LiteButton      *button,
  *
  * @param[in]  button                        Valid LiteButton object
  * @param[in]  state                         Button state
- * @param[in]  image_path                    File path with an image
+ * @param[in]  file_data                     File data (file path or data pointer) with an image
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  *
  * @return DFB_OK if successful.
  */
 DFBResult lite_set_button_image            ( LiteButton      *button,
                                              LiteButtonState  state,
-                                             const char      *image_path );
+                                             const void      *file_data,
+                                             unsigned int     length );
 
 /**
  * @brief Set the button image using an IDirectFBSurface object.
@@ -194,12 +196,14 @@ DFBResult lite_on_button_press             ( LiteButton          *button,
  *
  * This function makes the theme.
  *
- * @param[in]  image_paths                   File paths with button images
+ * @param[in]  file_data                     File data (file paths or data pointers) with button images
+ * @param[in]  length                        Length (0 if file path, lengths of buffer if data pointers)
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_new_button_theme            ( const char       *image_paths[LITE_BS_MAX],
+DFBResult lite_new_button_theme            ( const void       *file_data[LITE_BS_MAX],
+                                             unsigned int      length[LITE_BS_MAX],
                                              LiteButtonTheme **ret_theme );
 
 /**

@@ -80,19 +80,20 @@ lite_new_image( LiteBox         *parent,
 }
 
 DFBResult
-lite_load_image( LiteImage  *image,
-                 const char *filename )
+lite_load_image( LiteImage    *image,
+                 const void   *file_data,
+                 unsigned int  length )
 {
      DFBResult         ret;
      IDirectFBSurface *surface;
 
      LITE_NULL_PARAMETER_CHECK( image );
-     LITE_NULL_PARAMETER_CHECK( filename );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_BOX_TYPE_PARAMETER_CHECK( image, LITE_TYPE_IMAGE );
 
-     D_DEBUG_AT( LiteImageDomain, "Load image: %p from file: %s\n", image, filename );
+     D_DEBUG_AT( LiteImageDomain, "Load image: %p\n", image );
 
-     ret = prvlite_load_image( filename, &surface, &image->width, &image->height, &image->desc );
+     ret = prvlite_load_image( file_data, length, &surface, &image->width, &image->height, &image->desc );
      if (ret != DFB_OK)
           return ret;
 
@@ -214,29 +215,49 @@ destroy_image( LiteBox *box )
 }
 
 DFBResult
-prvlite_load_image( const char           *filename,
+prvlite_load_image( const void           *file_data,
+                    unsigned int          length,
                     IDirectFBSurface    **ret_surface,
                     int                  *ret_width,
                     int                  *ret_height,
                     DFBImageDescription  *ret_desc )
 {
-     DFBResult               ret;
-     DFBSurfaceDescription   dsc;
-     IDirectFBSurface       *surface;
-     IDirectFBImageProvider *provider;
+     DFBResult                 ret;
+     DFBDataBufferDescription  ddsc;
+     DFBSurfaceDescription     sdsc;
+     IDirectFBDataBuffer      *buffer;
+     IDirectFBSurface         *surface;
+     IDirectFBImageProvider   *provider;
 
-     LITE_NULL_PARAMETER_CHECK( filename );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_NULL_PARAMETER_CHECK( ret_surface );
 
-     /* create an image provider for loading the file */
-     ret = lite_dfb->CreateImageProvider( lite_dfb, filename, &provider );
+     /* create an image provider for loading the image */
+     if (!length) {
+          ddsc.flags         = DBDESC_FILE;
+          ddsc.file          = file_data;
+     }
+     else {
+          ddsc.flags         = DBDESC_MEMORY;
+          ddsc.memory.data   = file_data;
+          ddsc.memory.length = length;
+     }
+
+     ret = lite_dfb->CreateDataBuffer( lite_dfb, &ddsc, &buffer );
+     if (ret) {
+          DirectFBError( "LiTE/Image: CreateDataBuffer() failed", ret );
+          return ret;
+     }
+
+     ret = buffer->CreateImageProvider( buffer, &provider );
      if (ret) {
           DirectFBError( "LiTE/Image: CreateImageProvider() failed", ret );
+          buffer->Release( buffer );
           return ret;
      }
 
      /* retrieve a surface description for the image */
-     ret = provider->GetSurfaceDescription( provider, &dsc );
+     ret = provider->GetSurfaceDescription( provider, &sdsc );
      if (ret) {
           DirectFBError( "LiTE/Image: GetSurfaceDescription() failed", ret );
           provider->Release( provider );
@@ -244,7 +265,7 @@ prvlite_load_image( const char           *filename,
      }
 
      /* create a surface using the description */
-     ret = lite_dfb->CreateSurface( lite_dfb, &dsc, &surface );
+     ret = lite_dfb->CreateSurface( lite_dfb, &sdsc, &surface );
      if (ret) {
           DirectFBError( "LiTE/Image: CreateSurface() failed", ret );
           provider->Release( provider );
@@ -265,11 +286,11 @@ prvlite_load_image( const char           *filename,
 
      /* return width */
      if (ret_width)
-          *ret_width = dsc.width;
+          *ret_width = sdsc.width;
 
      /* return height */
      if (ret_height)
-          *ret_height = dsc.height;
+          *ret_height = sdsc.height;
 
      /* return image description */
      if (ret_desc)

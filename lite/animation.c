@@ -87,7 +87,8 @@ lite_new_animation( LiteBox             *parent,
 
 DFBResult
 lite_load_animation( LiteAnimation *animation,
-                     const char    *filename,
+                     const void    *file_data,
+                     unsigned int   length,
                      int            still_frame,
                      int            frame_width,
                      int            frame_height )
@@ -98,15 +99,15 @@ lite_load_animation( LiteAnimation *animation,
      IDirectFBSurface *image;
 
      LITE_NULL_PARAMETER_CHECK( animation );
-     LITE_NULL_PARAMETER_CHECK( filename );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_BOX_TYPE_PARAMETER_CHECK( animation, LITE_TYPE_ANIMATION );
 
-     D_DEBUG_AT( LiteAnimationDomain, "Load animation: %p from file: %s\n", animation, filename );
+     D_DEBUG_AT( LiteAnimationDomain, "Load animation: %p\n", animation );
 
      if (frame_width < 1 || frame_height < 1)
           return DFB_INVARG;
 
-     ret = prvlite_load_image( filename, &image, &image_width, &image_height, NULL );
+     ret = prvlite_load_image( file_data, length, &image, &image_width, &image_height, NULL );
      if (ret != DFB_OK)
           return ret;
 

@@ -23,11 +23,11 @@
 
 /* test for NULL parameter, return DFB_INVARG if NULL */
 #define LITE_NULL_PARAMETER_CHECK(exp) \
-    do {                               \
-        if ((exp) == NULL) {           \
-            return DFB_INVARG;         \
-        }                              \
-    } while (0)
+     do {                              \
+          if ((exp) == NULL) {         \
+              return DFB_INVARG;       \
+          }                            \
+     } while (0)
 
 /* pointer to the main interface */
 extern IDirectFB *lite_dfb;
@@ -50,7 +50,8 @@ void      prvlite_make_truncated_text      ( char          *text,
                                              IDirectFBFont *font );
 
 /* load an image */
-DFBResult prvlite_load_image               ( const char           *filename,
+DFBResult prvlite_load_image               ( const void           *filedata,
+                                             unsigned int          length,
                                              IDirectFBSurface    **ret_surface,
                                              int                  *ret_width,
                                              int                  *ret_height,

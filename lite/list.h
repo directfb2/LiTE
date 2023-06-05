@@ -321,13 +321,15 @@ DFBResult lite_list_on_sel_change          ( LiteList              *list,
  *
  * This function makes the theme.
  *
- * @param[in]  image_path                    File path with image for all scrollbar subsections (button1, button2, thumb)
+ * @param[in]  file_data                     File data (file path or data pointer) with image for all subsections
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  * @param[in]  image_margin                  Thumb image pixel margin
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_new_list_theme              ( const char     *image_path,
+DFBResult lite_new_list_theme              ( const void     *file_data,
+                                             unsigned int    length,
                                              int             image_margin,
                                              LiteListTheme **ret_theme );
 

@@ -16,7 +16,6 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 */
 
-#include <direct/filesystem.h>
 #include <lite/button.h>
 #include <lite/check.h>
 #include <lite/cursor.h>
@@ -27,6 +26,32 @@
 #include <lite/progressbar.h>
 #include <lite/scrollbar.h>
 #include <lite/textbutton.h>
+
+#ifdef LITEIMAGEDIR
+#include <direct/filesystem.h>
+#else
+#include "bottom.h"
+#include "bottomleft.h"
+#include "bottomright.h"
+#include "button_normal.h"
+#include "button_pressed.h"
+#include "button_hilite.h"
+#include "button_disabled.h"
+#include "button_hilite_on.h"
+#include "button_disabled_on.h"
+#include "button_normal_on.h"
+#include "checkbox.h"
+#include "left.h"
+#include "progressbar_bg.h"
+#include "progressbar_fg.h"
+#include "right.h"
+#include "scrollbarbox.h"
+#include "textbuttonbox.h"
+#include "top.h"
+#include "topleft.h"
+#include "topright.h"
+#include "wincursor.h"
+#endif
 
 D_DEBUG_DOMAIN( LiteCoreDomain, "LiTE/Core", "LiTE Core" );
 
@@ -40,6 +65,7 @@ static int        lite_refs   = 0;
 
 /**********************************************************************************************************************/
 
+#ifdef LITEIMAGEDIR
 static char *
 get_image_path( const char *name )
 {
@@ -49,23 +75,24 @@ get_image_path( const char *name )
 
      D_ASSERT( name != NULL );
 
-     len  = strlen( DATADIR ) + 1 + strlen( name ) + 6 + 1;
+     len  = strlen( LITEIMAGEDIR ) + 1 + strlen( name ) + 6 + 1;
      path = alloca( len );
 
      if (!getenv( "LITE_NO_DFIFF" )) {
           /* first try to find an image in DFIFF format */
-          snprintf( path, len, DATADIR"/%s.dfiff", name );
+          snprintf( path, len, LITEIMAGEDIR"/%s.dfiff", name );
           ret = direct_access( path, R_OK );
      }
 
      if (ret) {
           /* otherwise fall back on an image in PNG format */
-          snprintf( path, len, DATADIR"/%s.png", name );
+          snprintf( path, len, LITEIMAGEDIR"/%s.png", name );
           ret = direct_access( path, R_OK );
      }
 
      return ret ? NULL : D_STRDUP( path );
 }
+#endif
 
 DFBResult
 lite_open( int   *argc,
@@ -74,8 +101,9 @@ lite_open( int   *argc,
      DFBResult ret;
 
      if (!lite_refs) {
-          int         i;
-          const char *image_paths[8];
+          int           i;
+          const void   *file_data[8];
+          unsigned int  length[8];
 
           D_DEBUG_AT( LiteCoreDomain, "Open new LiTE instance...\n" );
 
@@ -97,6 +125,9 @@ lite_open( int   *argc,
                goto error;
           }
 
+          for (i = 0; i < D_ARRAY_SIZE(length); i++)
+               length[i] = 0;
+
           /* default window theme */
 
           if (!getenv( "LITE_NO_FRAME" )) {
@@ -107,21 +138,42 @@ lite_open( int   *argc,
                bg_color.b = DEFAULT_WINDOW_COLOR_B;
                bg_color.a = DEFAULT_WINDOW_COLOR_A;
 
-               image_paths[0] = get_image_path( DEFAULT_WINDOW_TOP_FRAME );
-               image_paths[1] = get_image_path( DEFAULT_WINDOW_BOTTOM_FRAME );
-               image_paths[2] = get_image_path( DEFAULT_WINDOW_LEFT_FRAME );
-               image_paths[3] = get_image_path( DEFAULT_WINDOW_RIGHT_FRAME );
-               image_paths[4] = get_image_path( DEFAULT_WINDOW_TOP_LEFT_FRAME );
-               image_paths[5] = get_image_path( DEFAULT_WINDOW_TOP_RIGHT_FRAME );
-               image_paths[6] = get_image_path( DEFAULT_WINDOW_BOTTOM_LEFT_FRAME );
-               image_paths[7] = get_image_path( DEFAULT_WINDOW_BOTTOM_RIGHT_FRAME );
+#ifdef LITEIMAGEDIR
+               file_data[0] = get_image_path( DEFAULT_WINDOW_TOP_FRAME );
+               file_data[1] = get_image_path( DEFAULT_WINDOW_BOTTOM_FRAME );
+               file_data[2] = get_image_path( DEFAULT_WINDOW_LEFT_FRAME );
+               file_data[3] = get_image_path( DEFAULT_WINDOW_RIGHT_FRAME );
+               file_data[4] = get_image_path( DEFAULT_WINDOW_TOP_LEFT_FRAME );
+               file_data[5] = get_image_path( DEFAULT_WINDOW_TOP_RIGHT_FRAME );
+               file_data[6] = get_image_path( DEFAULT_WINDOW_BOTTOM_LEFT_FRAME );
+               file_data[7] = get_image_path( DEFAULT_WINDOW_BOTTOM_RIGHT_FRAME );
+#else
+               file_data[0] = top_data;
+               length[0]    = sizeof(top_data);
+               file_data[1] = bottom_data;
+               length[1]    = sizeof(bottom_data);
+               file_data[2] = left_data;
+               length[2]    = sizeof(left_data);
+               file_data[3] = right_data;
+               length[3]    = sizeof(right_data);
+               file_data[4] = topleft_data;
+               length[4]    = sizeof(topleft_data);
+               file_data[5] = topright_data;
+               length[5]    = sizeof(topright_data);
+               file_data[6] = bottomleft_data;
+               length[6]    = sizeof(bottomleft_data);
+               file_data[7] = bottomright_data;
+               length[7]    = sizeof(bottomright_data);
+#endif
 
                ret = lite_new_window_theme( &bg_color,
                                             DEFAULT_WINDOW_TITLE_FONT, LITE_FONT_PLAIN, 16, DEFAULT_FONT_ATTRIBUTE,
-                                            image_paths, &liteDefaultWindowTheme );
+                                            file_data, length, &liteDefaultWindowTheme );
 
+#ifdef LITEIMAGEDIR
                for (i = 0; i < LITE_THEME_FRAME_PART_NUM; i++)
-                    D_FREE( (char*) image_paths[i] );
+                    D_FREE( (void*) file_data[i] );
+#endif
 
                if (ret != DFB_OK)
                     goto error;
@@ -129,75 +181,132 @@ lite_open( int   *argc,
 
           /* default button theme */
 
-          image_paths[0] = get_image_path( DEFAULT_BUTTON_IMAGE_NORMAL );
-          image_paths[1] = get_image_path( DEFAULT_BUTTON_IMAGE_PRESSED );
-          image_paths[2] = get_image_path( DEFAULT_BUTTON_IMAGE_HILITE );
-          image_paths[3] = get_image_path( DEFAULT_BUTTON_IMAGE_DISABLED );
-          image_paths[4] = get_image_path( DEFAULT_BUTTON_IMAGE_HILITE_ON );
-          image_paths[5] = get_image_path( DEFAULT_BUTTON_IMAGE_DISABLED_ON );
-          image_paths[6] = get_image_path( DEFAULT_BUTTON_IMAGE_NORMAL_ON );
+#ifdef LITEIMAGEDIR
+          file_data[0] = get_image_path( DEFAULT_BUTTON_IMAGE_NORMAL );
+          file_data[1] = get_image_path( DEFAULT_BUTTON_IMAGE_PRESSED );
+          file_data[2] = get_image_path( DEFAULT_BUTTON_IMAGE_HILITE );
+          file_data[3] = get_image_path( DEFAULT_BUTTON_IMAGE_DISABLED );
+          file_data[4] = get_image_path( DEFAULT_BUTTON_IMAGE_HILITE_ON );
+          file_data[5] = get_image_path( DEFAULT_BUTTON_IMAGE_DISABLED_ON );
+          file_data[6] = get_image_path( DEFAULT_BUTTON_IMAGE_NORMAL_ON );
+#else
+          file_data[0] = button_normal_data;
+          length[0]    = sizeof(button_normal_data);
+          file_data[1] = button_pressed_data;
+          length[1]    = sizeof(button_pressed_data);
+          file_data[2] = button_hilite_data;
+          length[2]    = sizeof(button_hilite_data);
+          file_data[3] = button_disabled_data;
+          length[3]    = sizeof(button_disabled_data);
+          file_data[4] = button_hilite_on_data;
+          length[4]    = sizeof(button_hilite_on_data);
+          file_data[5] = button_disabled_on_data;
+          length[5]    = sizeof(button_disabled_on_data);
+          file_data[6] = button_normal_on_data;
+          length[6]    = sizeof(button_normal_on_data);
+#endif
 
-          ret = lite_new_button_theme( image_paths, &liteDefaultButtonTheme );
+          ret = lite_new_button_theme( file_data, length, &liteDefaultButtonTheme );
 
+#ifdef LITEIMAGEDIR
           for (i = 0; i < LITE_BS_MAX; i++)
-               D_FREE( (char*) image_paths[i] );
+               D_FREE( (void*) file_data[i] );
+#endif
 
           if (ret != DFB_OK)
                goto error;
 
           /* default check theme */
 
-          image_paths[0] = get_image_path( DEFAULT_CHECK_IMAGE );
+#ifdef LITEIMAGEDIR
+          file_data[0] = get_image_path( DEFAULT_CHECKBOX_IMAGE );
+#else
+          file_data[0] = checkbox_data;
+          length[0]    = sizeof(checkbox_data);
+#endif
 
-          ret = lite_new_check_theme( image_paths[0], &liteDefaultCheckTheme );
+          ret = lite_new_check_theme( file_data[0], length[0], &liteDefaultCheckTheme );
 
-          D_FREE( (char*) image_paths[0] );
+#ifdef LITEIMAGEDIR
+          D_FREE( (void*) file_data[0] );
+#endif
 
           if (ret != DFB_OK)
                goto error;
 
           /* default list theme */
 
-          image_paths[0] = get_image_path( DEFAULT_SCROLLBAR_IMAGE );
+#ifdef LITEIMAGEDIR
+          file_data[0] = get_image_path( DEFAULT_SCROLLBARBOX_IMAGE );
+#else
+          file_data[0] = scrollbarbox_data;
+          length[0]    = sizeof(scrollbarbox_data);
+#endif
 
-          ret = lite_new_list_theme( image_paths[0], 3, &liteDefaultListTheme );
+          ret = lite_new_list_theme( file_data[0], length[0], 3, &liteDefaultListTheme );
 
-          D_FREE( (char*) image_paths[0] );
+#ifdef LITEIMAGEDIR
+          D_FREE( (void*) file_data[0] );
+#endif
 
           if (ret != DFB_OK)
                goto error;
 
           /* default progress bar theme */
 
-          image_paths[0] = get_image_path( DEFAULT_PROGRESSBAR_IMAGE_FG );
-          image_paths[1] = get_image_path( DEFAULT_PROGRESSBAR_IMAGE_BG );
+#ifdef LITEIMAGEDIR
+          file_data[0] = get_image_path( DEFAULT_PROGRESSBAR_IMAGE_FG );
+          file_data[1] = get_image_path( DEFAULT_PROGRESSBAR_IMAGE_BG );
+#else
+          file_data[0] = progressbar_fg_data;
+          length[0]    = sizeof(progressbar_fg_data);
+          file_data[1] = progressbar_bg_data;
+          length[1]    = sizeof(progressbar_bg_data);
+#endif
 
-          ret = lite_new_progressbar_theme( image_paths[0], image_paths[1], &liteDefaultProgressBarTheme );
+          ret = lite_new_progressbar_theme( file_data[0], length[0], file_data[1], length[1],
+                                            &liteDefaultProgressBarTheme );
 
-          D_FREE( (char*) image_paths[0] );
-          D_FREE( (char*) image_paths[1] );
+#ifdef LITEIMAGEDIR
+          D_FREE( (void*) file_data[0] );
+          D_FREE( (void*) file_data[1] );
+#endif
 
           if (ret != DFB_OK)
                goto error;
 
           /* default scrollbar theme */
 
-          image_paths[0] = get_image_path( DEFAULT_SCROLLBAR_IMAGE );
+#ifdef LITEIMAGEDIR
+          file_data[0] = get_image_path( DEFAULT_SCROLLBARBOX_IMAGE );
+#else
+          file_data[0] = scrollbarbox_data;
+          length[0]    = sizeof(scrollbarbox_data);
+#endif
 
-          ret = lite_new_scrollbar_theme( image_paths[0], 3, &liteDefaultScrollbarTheme );
+          ret = lite_new_scrollbar_theme( file_data[0], length[0], 3, &liteDefaultScrollbarTheme );
 
-          D_FREE( (char*) image_paths[0] );
+#ifdef LITEIMAGEDIR
+          D_FREE( (void*) file_data[0] );
+#endif
 
           if (ret != DFB_OK)
                goto error;
 
           /* default text button theme */
 
-          image_paths[0] = get_image_path( DEFAULT_TEXTBUTTON_IMAGE );
+#ifdef LITEIMAGEDIR
+          file_data[0] = get_image_path( DEFAULT_TEXTBUTTONBOX_IMAGE );
+#else
+          file_data[0] = textbuttonbox_data;
+          length[0]    = sizeof(textbuttonbox_data);
+#endif
 
-          ret = lite_new_text_button_theme( image_paths[0], &liteDefaultTextButtonTheme );
+          ret = lite_new_text_button_theme( file_data[0], length[0], &liteDefaultTextButtonTheme );
 
-          D_FREE( (char*) image_paths[0] );
+#ifdef LITEIMAGEDIR
+          D_FREE( (void*) file_data[0] );
+#endif
 
           if (ret != DFB_OK)
                goto error;
@@ -205,11 +314,18 @@ lite_open( int   *argc,
           /* default cursor */
 
           if (!getenv( "LITE_NO_CURSOR" )) {
-               image_paths[0] = get_image_path( DEFAULT_WINDOW_CURSOR );
+#ifdef LITEIMAGEDIR
+               file_data[0] = get_image_path( DEFAULT_WINDOW_CURSOR );
+#else
+               file_data[0] = wincursor_data;
+               length[0]    = sizeof(wincursor_data);
+#endif
 
-               ret = lite_load_cursor_from_file( &lite_cursor, image_paths[0] );
+               ret = lite_load_cursor( &lite_cursor, file_data[0], length[0] );
 
-               D_FREE( (char*) image_paths[0] );
+#ifdef LITEIMAGEDIR
+               D_FREE( (void*) file_data[0] );
+#endif
 
                if (ret != DFB_OK)
                     goto error;

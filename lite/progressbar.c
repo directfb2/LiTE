@@ -113,8 +113,10 @@ DFBResult lite_get_progressbar_value( LiteProgressBar *progressbar,
 
 DFBResult
 lite_set_progressbar_images( LiteProgressBar *progressbar,
-                             const char      *image_fg_path,
-                             const char      *image_bg_path )
+                             const void      *file_data_fg,
+                             unsigned int     length_fg,
+                             const void      *file_data_bg,
+                             unsigned int     length_bg )
 {
      DFBResult         ret;
      IDirectFBSurface *surface;
@@ -122,11 +124,10 @@ lite_set_progressbar_images( LiteProgressBar *progressbar,
      LITE_NULL_PARAMETER_CHECK( progressbar );
      LITE_BOX_TYPE_PARAMETER_CHECK( progressbar, LITE_TYPE_PROGRESSBAR );
 
-     D_DEBUG_AT( LiteProgressBarDomain, "Set progressbar: %p with images: %s %s\n", progressbar,
-                 image_fg_path, image_bg_path );
+     D_DEBUG_AT( LiteProgressBarDomain, "Set progressbar: %p\n", progressbar );
 
-     if (image_fg_path) {
-          ret = prvlite_load_image( image_fg_path, &surface, NULL, NULL, NULL );
+     if (file_data_fg) {
+          ret = prvlite_load_image( file_data_fg, length_fg, &surface, NULL, NULL, NULL );
           if (ret != DFB_OK)
                return ret;
 
@@ -140,8 +141,8 @@ lite_set_progressbar_images( LiteProgressBar *progressbar,
           progressbar->surface_fg = NULL;
      }
 
-     if (image_fg_path && image_bg_path) {
-          ret = prvlite_load_image( image_bg_path, &surface, NULL, NULL, NULL );
+     if (file_data_fg && file_data_bg) {
+          ret = prvlite_load_image( file_data_bg, length_bg, &surface, NULL, NULL, NULL );
           if (ret != DFB_OK) {
                progressbar->surface_fg->Release( progressbar->surface_fg );
                return ret;
@@ -161,14 +162,16 @@ lite_set_progressbar_images( LiteProgressBar *progressbar,
 }
 
 DFBResult
-lite_new_progressbar_theme( const char            *image_fg_path,
-                            const char            *image_bg_path,
+lite_new_progressbar_theme( const void            *file_data_fg,
+                            unsigned int           length_fg,
+                            const void            *file_data_bg,
+                            unsigned int           length_bg,
                             LiteProgressBarTheme **ret_theme )
 {
      DFBResult             ret;
      LiteProgressBarTheme *theme;
 
-     LITE_NULL_PARAMETER_CHECK( image_fg_path );
+     LITE_NULL_PARAMETER_CHECK( file_data_fg );
      LITE_NULL_PARAMETER_CHECK( ret_theme );
 
      if (liteDefaultProgressBarTheme && *ret_theme == liteDefaultProgressBarTheme)
@@ -176,14 +179,14 @@ lite_new_progressbar_theme( const char            *image_fg_path,
 
      theme = D_CALLOC( 1, sizeof(LiteProgressBarTheme) );
 
-     ret = prvlite_load_image( image_fg_path, &theme->surface_fg, NULL, NULL, NULL );
+     ret = prvlite_load_image( file_data_fg, length_fg, &theme->surface_fg, NULL, NULL, NULL );
      if (ret != DFB_OK) {
           D_FREE( theme );
           return ret;
      }
 
-     if (image_bg_path) {
-          ret = prvlite_load_image( image_bg_path, &theme->surface_bg, NULL, NULL, NULL );
+     if (file_data_bg) {
+          ret = prvlite_load_image( file_data_bg, length_bg, &theme->surface_bg, NULL, NULL, NULL );
           if (ret != DFB_OK) {
                theme->surface_fg->Release( theme->surface_fg );
                D_FREE( theme );

@@ -51,19 +51,20 @@ lite_set_current_cursor( LiteCursor *cursor )
 }
 
 DFBResult
-lite_load_cursor_from_file( LiteCursor *cursor,
-                            const char *cursor_path )
+lite_load_cursor( LiteCursor   *cursor,
+                  const void   *file_data,
+                  unsigned int  length )
 {
      DFBResult ret;
      int       width;
      int       height;
 
      LITE_NULL_PARAMETER_CHECK( cursor );
-     LITE_NULL_PARAMETER_CHECK( cursor_path );
+     LITE_NULL_PARAMETER_CHECK( file_data );
 
-     D_DEBUG_AT( LiteCursorDomain, "Load cursor: %p from file: %s\n", cursor, cursor_path );
+     D_DEBUG_AT( LiteCursorDomain, "Load cursor: %p\n", cursor );
 
-     ret = prvlite_load_image( cursor_path, &cursor->surface, &width, &height, NULL );
+     ret = prvlite_load_image( file_data, length, &cursor->surface, &width, &height, NULL );
      if (ret != DFB_OK)
           return ret;
 

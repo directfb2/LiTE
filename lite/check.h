@@ -143,12 +143,14 @@ DFBResult lite_get_check_state             ( LiteCheck      *check,
  * This function will set the images of a check box.
  *
  * @param[in]  check                         Valid LiteCheck object
- * @param[in]  image_path                    File path with image for all check box states
+ * @param[in]  file_data                     File data (file path or data pointer) with image for all check box states
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_set_check_all_images        ( LiteCheck  *check,
-                                             const char *image_path );
+DFBResult lite_set_check_all_images        ( LiteCheck    *check,
+                                             const void   *file_data,
+                                             unsigned int  length );
 
 /**
  * @brief Install a callback function for checked/unchecked presses.
@@ -171,12 +173,14 @@ DFBResult lite_on_check_press              ( LiteCheck          *check,
  *
  * This function makes the theme.
  *
- * @param[in]  image_path                    File path with image for all check box states
+ * @param[in]  file_data                     File data (file path or data pointer) with image for all check box states
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_new_check_theme             ( const char      *image_path,
+DFBResult lite_new_check_theme             ( const void      *file_data,
+                                             unsigned int     length,
                                              LiteCheckTheme **ret_theme );
 
 /**

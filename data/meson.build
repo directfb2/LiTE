@@ -15,76 +15,79 @@
 #  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
 
 lite_fonts = []
-if get_option('fontdir') == ''
-  lite_fonts = [
-    'Vera.dgiff',
-    'Vera.ttf',
-    'VeraBd.dgiff',
-    'VeraBd.ttf',
-    'VeraIt.dgiff',
-    'VeraIt.ttf',
-    'VeraBI.dgiff',
-    'VeraBI.ttf',
-    'VeraMo.dgiff',
-    'VeraMo.ttf',
-    'VeraMoBd.dgiff',
-    'VeraMoBd.ttf',
-    'VeraMoIt.dgiff',
-    'VeraMoIt.ttf',
-    'VeraMoBI.dgiff',
-    'VeraMoBI.ttf',
-    'VeraSe.dgiff',
-    'VeraSe.ttf',
-    'VeraSeBd.dgiff',
-    'VeraSeBd.ttf',
-    'whitrabt.dgiff',
-    'whitrabt.ttf'
-  ]
+
+fontdata_names = [
+  'Vera',
+  'VeraBd',
+  'VeraIt',
+  'VeraBI',
+  'VeraMo',
+  'VeraMoBd',
+  'VeraMoIt',
+  'VeraMoBI',
+  'VeraSe',
+  'VeraSeBd',
+  'whitrabt'
+]
+
+lite_images = []
+
+imagedata_names = [
+  'bottom',
+  'bottomleft',
+  'bottomright',
+  'button_disabled',
+  'button_disabled_on',
+  'button_hilite',
+  'button_hilite_on',
+  'button_normal',
+  'button_normal_on',
+  'button_pressed',
+  'checkbox',
+  'left',
+  'progressbar_bg',
+  'progressbar_fg',
+  'right',
+  'scrollbarbox',
+  'textbuttonbox',
+  'top',
+  'topleft',
+  'topright',
+  'wincursor'
+]
+
+rawdata_hdrs = []
+
+if font_headers == 'disabled'
+  if get_option('fontdir') == ''
+    foreach name : fontdata_names
+      lite_fonts += name + '.dgiff'
+      lite_fonts += name + '.ttf'
+    endforeach
+  endif
+else
+  foreach fontdata_name : fontdata_names
+    rawdata_hdrs += custom_target(fontdata_name,
+                                  input: fontdata_name + '.' + font_headers,
+                                  output: fontdata_name + '.h',
+                                  capture: true,
+                                  command: [directfb_csource, '--raw', '--name=@0@'.format(fontdata_name), '@INPUT@'])
+  endforeach
 endif
 
-lite_images = [
-  'bottom.dfiff',
-  'bottom.png',
-  'bottomleft.dfiff',
-  'bottomleft.png',
-  'bottomright.dfiff',
-  'bottomright.png',
-  'button_disabled.dfiff',
-  'button_disabled.png',
-  'button_disabled_on.dfiff',
-  'button_disabled_on.png',
-  'button_hilite.dfiff',
-  'button_hilite.png',
-  'button_hilite_on.dfiff',
-  'button_hilite_on.png',
-  'button_normal.dfiff',
-  'button_normal.png',
-  'button_normal_on.dfiff',
-  'button_normal_on.png',
-  'button_pressed.dfiff',
-  'button_pressed.png',
-  'check.dfiff',
-  'check.png',
-  'cursor.dfiff',
-  'cursor.png',
-  'left.dfiff',
-  'left.png',
-  'progressbar_bg.dfiff',
-  'progressbar_bg.png',
-  'progressbar_fg.dfiff',
-  'progressbar_fg.png',
-  'right.dfiff',
-  'right.png',
-  'scrollbar.dfiff',
-  'scrollbar.png',
-  'textbutton.dfiff',
-  'textbutton.png',
-  'top.dfiff',
-  'top.png',
-  'topleft.dfiff',
-  'topleft.png',
-  'topright.dfiff',
-  'topright.png'
-]
+if image_headers == 'disabled'
+  foreach name : imagedata_names
+    lite_images += name + '.dfiff'
+    lite_images += name + '.png'
+  endforeach
+else
+  foreach imagedata_name : imagedata_names
+    rawdata_hdrs += custom_target(imagedata_name,
+                                  input: imagedata_name + '.' + image_headers,
+                                  output: imagedata_name + '.h',
+                                  capture: true,
+                                  command: [directfb_csource, '--raw', '--name=@0@'.format(imagedata_name), '@INPUT@'])
+  endforeach
+endif
 
 install_data(lite_fonts, lite_images, install_dir: litedatadir)

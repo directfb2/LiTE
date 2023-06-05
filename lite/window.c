@@ -1983,14 +1983,15 @@ lite_new_window_theme( const DFBColor     *bg_color,
                        LiteFontStyle       style,
                        int                 size,
                        DFBFontAttributes   attr,
-                       const char         *image_paths[LITE_THEME_FRAME_PART_NUM],
+                       const void         *file_data[LITE_THEME_FRAME_PART_NUM],
+                       unsigned int        length[LITE_THEME_FRAME_PART_NUM],
                        LiteWindowTheme   **ret_theme )
 {
      DFBResult        ret;
      LiteWindowTheme *theme;
 
      LITE_NULL_PARAMETER_CHECK( bg_color );
-     LITE_NULL_PARAMETER_CHECK( image_paths );
+     LITE_NULL_PARAMETER_CHECK( file_data );
      LITE_NULL_PARAMETER_CHECK( ret_theme );
 
      if (liteDefaultWindowTheme && *ret_theme == liteDefaultWindowTheme)
@@ -2009,7 +2010,7 @@ lite_new_window_theme( const DFBColor     *bg_color,
      }
 
      /* load frame bitmaps */
-     ret = lite_theme_frame_load( &theme->frame, image_paths );
+     ret = lite_theme_frame_load( &theme->frame, file_data, length );
      if (ret != DFB_OK) {
           lite_release_font( theme->title_font );
           D_FREE( theme );

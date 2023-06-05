@@ -62,8 +62,9 @@ typedef struct {
 } LiteThemeFrame;
 
 /** @brief Load a frame. */
-DFBResult lite_theme_frame_load            ( LiteThemeFrame  *frame,
-                                             const char     **filenames );
+DFBResult lite_theme_frame_load            ( LiteThemeFrame *frame,
+                                             const void     *file_data[LITE_THEME_FRAME_PART_NUM],
+                                             unsigned int    length[LITE_THEME_FRAME_PART_NUM] );
 
 /** @brief Unload a frame. */
 void      lite_theme_frame_unload          ( LiteThemeFrame *frame );

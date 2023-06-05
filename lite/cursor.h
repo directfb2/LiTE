@@ -62,17 +62,19 @@ DFBResult lite_get_current_cursor          ( LiteCursor **ret_cursor );
 DFBResult lite_set_current_cursor          ( LiteCursor *cursor );
 
 /**
- * @brief Load a cursor from file.
+ * @brief Load a cursor.
  *
- * This function will load a cursor from a file.
+ * This function will load a cursor.
  *
  * @param[in]  cursor                        Valid LiteCursor object
- * @param[in]  cursor_path                   File path with the cursor image
+ * @param[in]  file_data                     File data (file path or data pointer) with the cursor image
+ * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_load_cursor_from_file       ( LiteCursor *cursor,
-                                             const char *cursor_path );
+DFBResult lite_load_cursor                 ( LiteCursor   *cursor,
+                                             const void   *file_data,
+                                             unsigned int  length );
 
 /**
  * @brief Free cursor resources.

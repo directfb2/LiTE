@@ -64,23 +64,6 @@ DFBResult lite_get_font                    ( const char         *spec,
                                              LiteFont          **ret_font );
 
 /**
- * @brief Get a LiteFont object from file.
- *
- * This function will retrieve a LiteFont object from a file.
- *
- * @param[in]  font_path                     File path with a font
- * @param[in]  size                          Font size
- * @param[in]  attr                          Font attributes
- * @param[out] ret_font                      Valid LiteFont object
- *
- * @return DFB_OK if successful.
- */
-DFBResult lite_get_font_from_file          ( const char         *font_path,
-                                             int                 size,
-                                             DFBFontAttributes   attr,
-                                             LiteFont          **ret_font );
-
-/**
  * @brief Increase the reference count of a LiteFont object.
  *
  * This function will increase the reference count of a LiteFont
@@ -145,19 +128,6 @@ DFBResult lite_set_active_font             ( LiteBox  *box,
  */
 DFBResult lite_get_active_font             ( LiteBox   *box,
                                              LiteFont **ret_font );
-
-/**
- * @brief Get the path and filename of the font.
- *
- * This function will retrieve the path and filename of the font.
- *
- * @param[in]  font                          Valid LiteFont object
- * @param[out] ret_font_path                 File path with a font
- *
- * @return DFB_OK if successful.
- */
-DFBResult lite_get_font_filename           ( LiteFont    *font,
-                                             const char **ret_font_path );
 
 /**
  * @brief Get the attributes of the font.

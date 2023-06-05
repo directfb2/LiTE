@@ -100,28 +100,36 @@ DFBResult lite_get_progressbar_value       ( LiteProgressBar *progressbar,
  * This function will set the images of a progress bar.
  *
  * @param[in]  progressbar                   Valid LiteProgressBar object
- * @param[in]  image_fg_path                 File path with progress bar image (foreground)
- * @param[in]  image_bg_path                 File path with progress bar image (background)
+ * @param[in]  file_data_fg                  File data (file path or data pointer) with progress bar image (foreground)
+ * @param[in]  length_fg                     Length (0 if file path, length of buffer if data pointer)
+ * @param[in]  file_data_bg                  File data (file path or data pointer) with progress bar image (background)
+ * @param[in]  length_bg                     Length (0 if file path, length of buffer if data pointer)
  *
  * @return DFB_OK if successful.
  */
 DFBResult lite_set_progressbar_images      ( LiteProgressBar *progressbar,
-                                             const char      *image_fg_path,
-                                             const char      *image_bg_path );
+                                             const void      *file_data_fg,
+                                             unsigned int     length_fg,
+                                             const void      *file_data_bg,
+                                             unsigned int     length_bg );
 
 /**
  * @brief Create a progress bar theme.
  *
  * This function makes the theme.
  *
- * @param[in]  image_fg_path                 File path with progress bar image (foreground)
- * @param[in]  image_bg_path                 File path with progress bar image (background)
+ * @param[in]  file_data_fg                  File data (file path or data pointer) with progress bar image (foreground)
+ * @param[in]  length_fg                     Length (0 if file path, length of buffer if data pointer)
+ * @param[in]  file_data_bg                  File data (file path or data pointer) with progress bar image (background)
+ * @param[in]  length_bg                     Length (0 if file path, length of buffer if data pointer)
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_new_progressbar_theme       ( const char            *image_fg_path,
-                                             const char            *image_bg_path,
+DFBResult lite_new_progressbar_theme       ( const void            *file_data_fg,
+                                             unsigned int           length_fg,
+                                             const void            *file_data_bg,
+                                             unsigned int           length_bg,
                                              LiteProgressBarTheme **ret_theme );
 
 /**

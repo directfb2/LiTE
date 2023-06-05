@@ -891,7 +891,8 @@ DFBResult lite_on_window_wheel             ( LiteWindow          *window,
  * @param[in]  style                         Title font style
  * @param[in]  size                          Title font size
  * @param[in]  attr                          Title font attributes
- * @param[in]  image_paths                   File paths with window frame images
+ * @param[in]  file_data                     File data (file paths or data pointers) with window frame images
+ * @param[in]  length                        Length (0 if file path, lengths of buffer if data pointers)
  * @param[out] ret_theme                     New theme
  *
  * @return DFB_OK if successful.
@@ -901,7 +902,8 @@ DFBResult lite_new_window_theme            ( const DFBColor     *bg_color,
                                              LiteFontStyle       style,
                                              int                 size,
                                              DFBFontAttributes   attr,
-                                             const char         *image_paths[LITE_THEME_FRAME_PART_NUM],
+                                             const void         *file_data[LITE_THEME_FRAME_PART_NUM],
+                                             unsigned int        length[LITE_THEME_FRAME_PART_NUM],
                                              LiteWindowTheme   **ret_theme );
 
 /**
