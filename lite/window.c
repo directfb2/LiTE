@@ -347,7 +347,7 @@ lite_window_get_creator( LiteWindow  *window,
 }
 
 static void
-release_grabs()
+release_grabs( void )
 {
      if (grabbed_window_global) {
           D_DEBUG_AT( LiteWindowDomain, "  -> release grabbed_window_global\n" );
@@ -471,7 +471,7 @@ lite_window_set_modal( LiteWindow *window,
 }
 
 static void
-draw_updated_windows()
+draw_updated_windows( void )
 {
      int i, n;
 
@@ -777,7 +777,7 @@ lite_window_event_loop( LiteWindow *window,
 }
 
 static DFBResult
-wakeup_event_loop()
+wakeup_event_loop( void )
 {
      DFBResult ret;
 
