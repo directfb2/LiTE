@@ -603,13 +603,13 @@ on_key_down(LiteBox *box, DFBWindowEvent *evt)
 
      cur_selected = list->cur_item_index;
 
-     if( evt->key_symbol == DIKS_CURSOR_UP )
+     if (evt->key_symbol == DIKS_CURSOR_UP)
           new_selected = cur_selected - 1;
-     else if( evt->key_symbol == DIKS_CURSOR_DOWN )
+     else if (evt->key_symbol == DIKS_CURSOR_DOWN)
           new_selected = cur_selected + 1;
-     else if( evt->key_symbol == DIKS_PAGE_UP )
+     else if (evt->key_symbol == DIKS_PAGE_UP)
           new_selected = cur_selected - list->box.rect.h / list->row_height;
-     else if( evt->key_symbol == DIKS_PAGE_DOWN )
+     else /* evt->key_symbol == DIKS_PAGE_DOWN */
           new_selected = cur_selected + list->box.rect.h / list->row_height;
 
      if (new_selected < 0)
@@ -617,9 +617,8 @@ on_key_down(LiteBox *box, DFBWindowEvent *evt)
      if (new_selected >= list->item_count)
           new_selected = list->item_count - 1;
 
-     if (new_selected != cur_selected) {
+     if (new_selected != cur_selected)
           lite_list_set_selected_item_index( list, new_selected );
-     }
 
      return 1;
 }

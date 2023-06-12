@@ -1,3 +1,24 @@
+commit e357bedbc8622a309ef6eb641c6b7d8e4ddb8f61
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Mon Jun 12 08:58:40 2023 +0200
+
+    Add NuttX build support
+
+commit 6abdf4cd8ee862326fa555fa95026dccc716d90d
+Merge: 1446944 3ba6f33
+Author: DirectFB2 <80045286+directfb2@users.noreply.github.com>
+Date:   Mon Jun 5 12:19:58 2023 +0200
+
+    Merge pull request #7 from caramelli/master
+    
+    Add build options to use generated headers containing font/image data
+
+commit 3ba6f335b55f702a17c737d77a2202bf88e2e8b7
+Author: Nicolas Caramelli <caramelli.devel@gmail.com>
+Date:   Mon Jun 5 11:33:51 2023 +0200
+
+    Update ChangeLog
+
 commit 722a58dba737d2a41a0016273d2ecd52735716cd
 Author: Nicolas Caramelli <caramelli.devel@gmail.com>
 Date:   Mon Jun 5 11:33:07 2023 +0200
