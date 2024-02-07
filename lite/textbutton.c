@@ -191,10 +191,10 @@ lite_get_text_button_state( LiteTextButton      *textbutton,
      return DFB_OK;
 }
 
-DFBResult
-lite_set_text_button_all_images( LiteTextButton *textbutton,
-                                 const void     *file_data,
-                                 unsigned int    length )
+static DFBResult
+set_text_button_all_images( LiteTextButton *textbutton,
+                            const void     *file_data,
+                            unsigned int    length )
 {
      LITE_NULL_PARAMETER_CHECK( textbutton );
      LITE_BOX_TYPE_PARAMETER_CHECK( textbutton, LITE_TYPE_TEXT_BUTTON );
@@ -226,6 +226,21 @@ lite_set_text_button_all_images( LiteTextButton *textbutton,
      }
 
      return lite_update_box( LITE_BOX(textbutton), NULL );
+}
+
+DFBResult
+lite_set_text_button_all_images( LiteTextButton *textbutton,
+                                 const char     *image_path )
+{
+     return set_text_button_all_images( textbutton, image_path, 0 );
+}
+
+DFBResult
+lite_set_text_button_all_images_data( LiteTextButton *textbutton,
+                                      const void     *data,
+                                      unsigned int    length )
+{
+     return set_text_button_all_images( textbutton, data, length );
 }
 
 DFBResult

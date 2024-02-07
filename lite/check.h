@@ -143,13 +143,26 @@ DFBResult lite_get_check_state             ( LiteCheck      *check,
  * This function will set the images of a check box.
  *
  * @param[in]  check                         Valid LiteCheck object
- * @param[in]  file_data                     File data (file path or data pointer) with image for all check box states
- * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
+ * @param[in]  image_path                    File path with image for all check box states
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_set_check_all_images        ( LiteCheck    *check,
-                                             const void   *file_data,
+DFBResult lite_set_check_all_images        ( LiteCheck  *check,
+                                             const char *image_path );
+
+/**
+ * @brief Set all check box images from memory.
+ *
+ * This function will set the images of a check box from memory.
+ *
+ * @param[in]  check                         Valid LiteCheck object
+ * @param[in]  data                          Data with image for all check box states
+ * @param[in]  length                        Length of buffer
+ *
+ * @return DFB_OK if successful.
+ */
+DFBResult lite_set_check_all_images_data   ( LiteCheck    *check,
+                                             const void   *data,
                                              unsigned int  length );
 
 /**

@@ -148,14 +148,30 @@ DFBResult lite_get_button_state            ( LiteButton      *button,
  *
  * @param[in]  button                        Valid LiteButton object
  * @param[in]  state                         Button state
- * @param[in]  file_data                     File data (file path or data pointer) with an image
- * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
+ * @param[in]  image_path                    File path with an image
  *
  * @return DFB_OK if successful.
  */
 DFBResult lite_set_button_image            ( LiteButton      *button,
                                              LiteButtonState  state,
-                                             const void      *file_data,
+                                             const char      *image_path );
+
+/**
+ * @brief Set button image from memory.
+ *
+ * This function will set the image of a button from memory.
+ * Each button state corresponds to a separate image.
+ *
+ * @param[in]  button                        Valid LiteButton object
+ * @param[in]  state                         Button state
+ * @param[in]  data                          Data with an image
+ * @param[in]  length                        Length of buffer
+ *
+ * @return DFB_OK if successful.
+ */
+DFBResult lite_set_button_image_data       ( LiteButton      *button,
+                                             LiteButtonState  state,
+                                             const void      *data,
                                              unsigned int     length );
 
 /**

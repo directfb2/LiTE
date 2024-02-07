@@ -79,10 +79,10 @@ lite_new_image( LiteBox         *parent,
      return DFB_OK;
 }
 
-DFBResult
-lite_load_image( LiteImage    *image,
-                 const void   *file_data,
-                 unsigned int  length )
+static DFBResult
+load_image( LiteImage    *image,
+            const void   *file_data,
+            unsigned int  length )
 {
      DFBResult         ret;
      IDirectFBSurface *surface;
@@ -108,6 +108,21 @@ lite_load_image( LiteImage    *image,
           image->blitting_flags = DSBLIT_NOFX;
 
      return lite_update_box( LITE_BOX(image), NULL );
+}
+
+DFBResult
+lite_load_image( LiteImage  *image,
+                 const char *filename )
+{
+     return load_image( image, filename, 0 );
+}
+
+DFBResult
+lite_load_image_data( LiteImage    *image,
+                      const void   *data,
+                      unsigned int  length )
+{
+     return load_image( image, data, length );
 }
 
 DFBResult

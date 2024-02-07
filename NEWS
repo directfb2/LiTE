@@ -6,6 +6,7 @@
 - Back to widgets built inside the LiTE library
 - Create default theme for widgets during lite_open() sequence
 - Meson build system
+- NuttX support
 - Replace LITE_NO_THEME with LITE_NO_FRAME
 
 0.8.10 (September 19 2008)

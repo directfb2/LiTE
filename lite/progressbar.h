@@ -100,17 +100,32 @@ DFBResult lite_get_progressbar_value       ( LiteProgressBar *progressbar,
  * This function will set the images of a progress bar.
  *
  * @param[in]  progressbar                   Valid LiteProgressBar object
- * @param[in]  file_data_fg                  File data (file path or data pointer) with progress bar image (foreground)
- * @param[in]  length_fg                     Length (0 if file path, length of buffer if data pointer)
- * @param[in]  file_data_bg                  File data (file path or data pointer) with progress bar image (background)
- * @param[in]  length_bg                     Length (0 if file path, length of buffer if data pointer)
+ * @param[in]  image_fg_path                 File path with progress bar image (foreground)
+ * @param[in]  image_bg_path                 File path with progress bar image (background)
  *
  * @return DFB_OK if successful.
  */
 DFBResult lite_set_progressbar_images      ( LiteProgressBar *progressbar,
-                                             const void      *file_data_fg,
+                                             const char      *image_fg_path,
+                                             const char      *image_bg_path );
+
+/**
+ * @brief Set progress bar images from memory.
+ *
+ * This function will set the images of a progress bar from memory.
+ *
+ * @param[in]  progressbar                   Valid LiteProgressBar object
+ * @param[in]  data_fg                       Data with progress bar image (foreground)
+ * @param[in]  length_fg                     Length of buffer (foreground)
+ * @param[in]  data_bg                       Data with progress bar image (background)
+ * @param[in]  length_bg                     Length of buffer (background)
+ *
+ * @return DFB_OK if successful.
+ */
+DFBResult lite_set_progressbar_images_data ( LiteProgressBar *progressbar,
+                                             const void      *data_fg,
                                              unsigned int     length_fg,
-                                             const void      *file_data_bg,
+                                             const void      *data_bg,
                                              unsigned int     length_bg );
 
 /**
