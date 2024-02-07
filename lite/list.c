@@ -447,8 +447,9 @@ lite_list_recalc_layout( LiteList *list )
      return lite_update_box( LITE_BOX(list->scrollbar), NULL );
 }
 
-DFBResult lite_set_list_scrollbar( LiteList      *list,
-                                   LiteScrollbar *scrollbar )
+DFBResult
+lite_set_list_scrollbar( LiteList      *list,
+                         LiteScrollbar *scrollbar )
 {
      LITE_NULL_PARAMETER_CHECK( list );
      LITE_BOX_TYPE_PARAMETER_CHECK( list, LITE_TYPE_LIST );

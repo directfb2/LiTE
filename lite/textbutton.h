@@ -145,13 +145,27 @@ DFBResult lite_get_text_button_state       ( LiteTextButton      *textbutton,
  * This function will set the images of a text button.
  *
  * @param[in]  textbutton                    Valid LiteTextButton object
- * @param[in]  file_data                     File data (file path or data pointer) with image for all text button states
- * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
+ * @param[in]  image_path                    File path with image for all text button states
  *
  * @return DFB_OK if successful.
  */
 DFBResult lite_set_text_button_all_images  ( LiteTextButton *textbutton,
-                                             const void     *file_data,
+                                             const char     *image_path );
+
+/**
+ * @brief Set all text button images from memory.
+ *
+ * This function will set the images of a text button from memory.
+ *
+ * @param[in]  textbutton                    Valid LiteTextButton object
+ * @param[in]  data                          Data with image for all text button states
+ * @param[in]  length                        Length of buffer
+ *
+ * @return DFB_OK if successful.
+ */
+DFBResult
+lite_set_text_button_all_images_data       ( LiteTextButton *textbutton,
+                                             const void     *data,
                                              unsigned int    length );
 
 /**

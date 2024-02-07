@@ -85,13 +85,13 @@ lite_new_animation( LiteBox             *parent,
      return DFB_OK;
 }
 
-DFBResult
-lite_load_animation( LiteAnimation *animation,
-                     const void    *file_data,
-                     unsigned int   length,
-                     int            still_frame,
-                     int            frame_width,
-                     int            frame_height )
+static DFBResult
+load_animation( LiteAnimation *animation,
+                const void    *file_data,
+                unsigned int   length,
+                int            still_frame,
+                int            frame_width,
+                int            frame_height )
 {
      DFBResult         ret;
      int               frames_h, frames_v, frames;
@@ -145,6 +145,27 @@ lite_load_animation( LiteAnimation *animation,
      animation->frames_v     = frames_v;
 
      return DFB_OK;
+}
+
+DFBResult
+lite_load_animation( LiteAnimation *animation,
+                     const char    *filename,
+                     int            still_frame,
+                     int            frame_width,
+                     int            frame_height )
+{
+     return load_animation( animation, filename, 0, still_frame, frame_width, frame_height );
+}
+
+DFBResult
+lite_load_animation_data( LiteAnimation *animation,
+                          const void    *data,
+                          unsigned int   length,
+                          int            still_frame,
+                          int            frame_width,
+                          int            frame_height )
+{
+     return load_animation( animation, data, length, still_frame, frame_width, frame_height );
 }
 
 DFBResult

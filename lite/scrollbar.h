@@ -172,13 +172,29 @@ DFBResult lite_get_scroll_info             ( LiteScrollbar  *scrollbar,
  * This function will set the images of a scrollbar.
  *
  * @param[in]  scrollbar                     Valid LiteScrollbar object
- * @param[in]  file_data                     File data (file path or data pointer) with image for all subsections
- * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
+ * @param[in]  image_path                    File path with image for all scrollbar subsections (button1, button2, thumb)
  * @param[in]  image_margin                  Thumb image pixel margin
  *
  * @return DFB_OK if successful.
  */
 DFBResult lite_set_scrollbar_all_images    ( LiteScrollbar *scrollbar,
+                                             const char    *image_path,
+                                             int            image_margin );
+
+/**
+ * @brief Set all scrollbar images from memory.
+ *
+ * This function will set the images of a scrollbar from memory.
+ *
+ * @param[in]  scrollbar                     Valid LiteScrollbar object
+ * @param[in]  data                          Data with image for all scrollbar subsections (button1, button2, thumb)
+ * @param[in]  length                        Length of buffer
+ * @param[in]  image_margin                  Thumb image pixel margin
+ *
+ * @return DFB_OK if successful.
+ */
+DFBResult
+lite_set_scrollbar_all_images_data         ( LiteScrollbar *scrollbar,
                                              const void    *file_data,
                                              unsigned int   length,
                                              int            image_margin );

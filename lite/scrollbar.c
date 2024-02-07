@@ -194,8 +194,9 @@ lite_get_scroll_pos( LiteScrollbar *scrollbar,
      return DFB_OK;
 }
 
-DFBResult lite_set_scroll_info( LiteScrollbar  *scrollbar,
-                                LiteScrollInfo *info )
+DFBResult
+lite_set_scroll_info( LiteScrollbar  *scrollbar,
+                      LiteScrollInfo *info )
 {
      bool dragging;
      int  max;
@@ -260,11 +261,11 @@ lite_get_scroll_info( LiteScrollbar  *scrollbar,
      return DFB_OK;
 }
 
-DFBResult
-lite_set_scrollbar_all_images( LiteScrollbar *scrollbar,
-                               const void    *file_data,
-                               unsigned int   length,
-                               int            image_margin )
+static DFBResult
+set_scrollbar_all_images( LiteScrollbar *scrollbar,
+                          const void    *file_data,
+                          unsigned int   length,
+                          int            image_margin )
 {
      LITE_NULL_PARAMETER_CHECK( scrollbar );
      LITE_BOX_TYPE_PARAMETER_CHECK( scrollbar, LITE_TYPE_SCROLLBAR );
@@ -301,6 +302,23 @@ lite_set_scrollbar_all_images( LiteScrollbar *scrollbar,
 }
 
 DFBResult
+lite_set_scrollbar_all_images( LiteScrollbar *scrollbar,
+                               const char    *image_path,
+                               int            image_margin )
+{
+     return set_scrollbar_all_images( scrollbar, image_path, 0, image_margin );
+}
+ 
+DFBResult
+lite_set_scrollbar_all_images_data( LiteScrollbar *scrollbar,
+                                    const void    *data,
+                                    unsigned int   length,
+                                    int            image_margin )
+{
+     return set_scrollbar_all_images( scrollbar, data, length, image_margin );
+}
+
+DFBResult
 lite_on_scrollbar_update( LiteScrollbar           *scrollbar,
                           LiteScrollbarUpdateFunc  callback,
                           void                    *data )
@@ -316,10 +334,11 @@ lite_on_scrollbar_update( LiteScrollbar           *scrollbar,
      return DFB_OK;
 }
 
-DFBResult lite_new_scrollbar_theme( const void          *file_data,
-                                    unsigned int         length,
-                                    int                  image_margin,
-                                    LiteScrollbarTheme **ret_theme )
+DFBResult
+lite_new_scrollbar_theme( const void          *file_data,
+                          unsigned int         length,
+                          int                  image_margin,
+                          LiteScrollbarTheme **ret_theme )
 {
      DFBResult           ret;
      LiteScrollbarTheme *theme;

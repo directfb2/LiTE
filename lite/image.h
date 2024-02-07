@@ -71,13 +71,26 @@ DFBResult lite_new_image                   ( LiteBox         *parent,
  * This function will load an image.
  *
  * @param[in]  image                         Valid LiteImage object
- * @param[in]  file_data                     File data (file path or data pointer) with an image
- * @param[in]  length                        Length (0 if file path, length of buffer if data pointer)
+ * @param[in]  filename                      File path with an image
  *
  * @return DFB_OK if successful.
  */
-DFBResult lite_load_image                  ( LiteImage    *image,
-                                             const void   *file_data,
+DFBResult lite_load_image                  ( LiteImage  *image,
+                                             const char *filename );
+
+/**
+ * @brief Load an image from memory.
+ *
+ * This function will load an image from memory.
+ *
+ * @param[in]  image                         Valid LiteImage object
+ * @param[in]  data                          Data with an image
+ * @param[in]  length                        Length of buffer
+ *
+ * @return DFB_OK if successful.
+ */
+DFBResult lite_load_image_data             ( LiteImage    *image,
+                                             const void   *data,
                                              unsigned int  length );
 
 /**

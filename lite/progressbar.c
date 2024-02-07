@@ -76,8 +76,9 @@ lite_new_progressbar( LiteBox               *parent,
      return DFB_OK;
 }
 
-DFBResult lite_set_progressbar_value( LiteProgressBar *progressbar,
-                                      float            value )
+DFBResult
+lite_set_progressbar_value( LiteProgressBar *progressbar,
+                            float            value )
 {
      LITE_NULL_PARAMETER_CHECK( progressbar );
      LITE_BOX_TYPE_PARAMETER_CHECK( progressbar, LITE_TYPE_PROGRESSBAR );
@@ -97,8 +98,9 @@ DFBResult lite_set_progressbar_value( LiteProgressBar *progressbar,
      return lite_update_box( LITE_BOX(progressbar), NULL );
 }
 
-DFBResult lite_get_progressbar_value( LiteProgressBar *progressbar,
-                                      float           *ret_value )
+DFBResult
+lite_get_progressbar_value( LiteProgressBar *progressbar,
+                            float           *ret_value )
 {
      LITE_NULL_PARAMETER_CHECK( progressbar );
      LITE_NULL_PARAMETER_CHECK( ret_value );
@@ -111,12 +113,12 @@ DFBResult lite_get_progressbar_value( LiteProgressBar *progressbar,
      return DFB_OK;
 }
 
-DFBResult
-lite_set_progressbar_images( LiteProgressBar *progressbar,
-                             const void      *file_data_fg,
-                             unsigned int     length_fg,
-                             const void      *file_data_bg,
-                             unsigned int     length_bg )
+static DFBResult
+set_progressbar_images( LiteProgressBar *progressbar,
+                        const void      *file_data_fg,
+                        unsigned int     length_fg,
+                        const void      *file_data_bg,
+                        unsigned int     length_bg )
 {
      DFBResult         ret;
      IDirectFBSurface *surface;
@@ -161,6 +163,24 @@ lite_set_progressbar_images( LiteProgressBar *progressbar,
      return lite_update_box( LITE_BOX(progressbar), NULL );
 }
 
+DFBResult
+lite_set_progressbar_images( LiteProgressBar *progressbar,
+                             const char      *image_fg_path,
+                             const char      *image_bg_path )
+{
+     return set_progressbar_images( progressbar, image_fg_path, 0, image_bg_path, 0 );
+}
+ 
+DFBResult
+lite_set_progressbar_images_data( LiteProgressBar *progressbar,
+                                  const void      *data_fg,
+                                  unsigned int     length_fg,
+                                  const void      *data_bg,
+                                  unsigned int     length_bg )
+{
+     return set_progressbar_images( progressbar, data_fg, length_fg, data_bg, length_bg );
+}
+ 
 DFBResult
 lite_new_progressbar_theme( const void            *file_data_fg,
                             unsigned int           length_fg,

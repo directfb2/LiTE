@@ -186,11 +186,11 @@ lite_get_button_state( LiteButton      *button,
      return DFB_OK;
 }
 
-DFBResult
-lite_set_button_image( LiteButton      *button,
-                       LiteButtonState  state,
-                       const void      *file_data,
-                       unsigned int     length )
+static DFBResult
+set_button_image( LiteButton      *button,
+                  LiteButtonState  state,
+                  const void      *file_data,
+                  unsigned int     length )
 {
      LITE_NULL_PARAMETER_CHECK( button );
      LITE_BOX_TYPE_PARAMETER_CHECK( button, LITE_TYPE_BUTTON );
@@ -228,6 +228,23 @@ lite_set_button_image( LiteButton      *button,
      }
 
      return DFB_OK;
+}
+
+DFBResult
+lite_set_button_image( LiteButton      *button,
+                       LiteButtonState  state,
+                       const char      *image_path )
+{
+     return set_button_image( button, state, image_path, 0 );
+}
+
+DFBResult
+lite_set_button_image_data( LiteButton      *button,
+                            LiteButtonState  state,
+                            const void      *data,
+                            unsigned int     length )
+{
+     return set_button_image( button, state, data, length );
 }
 
 DFBResult

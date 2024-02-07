@@ -186,10 +186,10 @@ lite_get_check_state( LiteCheck      *check,
      return DFB_OK;
 }
 
-DFBResult
-lite_set_check_all_images( LiteCheck    *check,
-                           const void   *file_data,
-                           unsigned int  length )
+static DFBResult
+set_check_all_images( LiteCheck    *check,
+                      const void   *file_data,
+                      unsigned int  length )
 {
      LITE_NULL_PARAMETER_CHECK( check );
      LITE_BOX_TYPE_PARAMETER_CHECK( check, LITE_TYPE_CHECK );
@@ -221,6 +221,21 @@ lite_set_check_all_images( LiteCheck    *check,
      }
 
      return lite_update_box( LITE_BOX(check), NULL );
+}
+
+DFBResult
+lite_set_check_all_images( LiteCheck  *check,
+                           const char *image_path )
+{
+     return set_check_all_images( check, image_path, 0 );
+}
+
+DFBResult
+lite_set_check_all_images_data( LiteCheck    *check,
+                                const void   *data,
+                                unsigned int  length )
+{
+     return set_check_all_images( check, data, length );
 }
 
 DFBResult
